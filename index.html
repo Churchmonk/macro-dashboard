@@ -1,0 +1,3094 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DS Macro Jungle — 매크로 투자 프레임워크</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════
+   ROOT VARIABLES — DS Asset 스타일
+   흰 배경, 네이비 포인트, 미니멀 코퍼릿
+════════════════════════════════ */
+:root {
+  --white:      #ffffff;
+  --bg:         #f5f6f8;
+  --bg-card:    #ffffff;
+  --bg-light:   #f0f3f8;
+
+  --navy:       #1a3a6b;
+  --navy-dark:  #0f2347;
+  --navy-mid:   #2a5298;
+  --navy-light: #e8eef8;
+
+  --accent:     #1a5fc8;
+  --accent-lt:  #e8f0fd;
+
+  --text-dark:  #1a2035;
+  --text-body:  #3d4a5c;
+  --text-sub:   #7a8699;
+  --text-muted: #b0bbc8;
+
+  --green:      #0a875a;
+  --green-bg:   #e6f5f0;
+  --red:        #c0392b;
+  --red-bg:     #fdf0ef;
+  --yellow:     #b5770d;
+  --yellow-bg:  #fef9ec;
+  --orange:     #c05621;
+  --orange-bg:  #fef3eb;
+  --purple:     #6b46c1;
+  --purple-bg:  #f3f0fd;
+
+  --border:     #e2e8f0;
+  --border-md:  #cbd5e0;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg:  0 8px 24px rgba(0,0,0,0.10);
+
+  --radius:     6px;
+  --radius-lg:  10px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text-body);
+  font-family: 'Inter', 'Noto Sans KR', -apple-system, sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ════════════════════
+   HERO BANNER
+════════════════════ */
+.hero-banner {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+.hero-img-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  display: block;
+}
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(10,23,55,0.88) 0%,
+    rgba(15,35,71,0.82) 40%,
+    rgba(26,58,107,0.60) 70%,
+    rgba(26,58,107,0.30) 100%
+  );
+}
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 0 48px;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 12px;
+  letter-spacing: -1px;
+}
+.hero-ds     { color: #ffffff; }
+.hero-macro  { color: rgba(255,255,255,0.85); }
+.hero-jungle {
+  color: #4ade80;
+  text-shadow: 0 0 32px rgba(74,222,128,0.4);
+}
+.hero-tagline {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 18px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+}
+.hero-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hero-badge {
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.20);
+  color: rgba(255,255,255,0.80);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+/* ════════════════════
+   HEADER / NAV
+════════════════════ */
+.topnav {
+  background: var(--navy-dark);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+}
+.topnav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.topnav-brand .brand-name {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+.topnav-brand .brand-sub {
+  color: rgba(255,255,255,0.45);
+  font-size: 11px;
+  border-left: 1px solid rgba(255,255,255,0.2);
+  padding-left: 12px;
+  letter-spacing: 0.5px;
+}
+.topnav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.topnav-right .live-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+}
+.live-dot {
+  width: 6px; height: 6px;
+  background: #4ade80;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.topnav-right .clock {
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  font-family: 'Inter', monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 서브헤더 ── */
+.subheader {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.subheader::-webkit-scrollbar { display: none; }
+.subnav-tab {
+  padding: 14px 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text-sub);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.subnav-tab:hover { color: var(--navy); }
+.subnav-tab.active {
+  color: var(--navy);
+  border-bottom-color: var(--navy);
+  font-weight: 600;
+}
+.subnav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tag-pill {
+  background: var(--accent-lt);
+  color: var(--accent);
+  border: 1px solid #c8dafc;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* ════════════════════
+   LAYOUT
+════════════════════ */
+.container { max-width: 1560px; margin: 0 auto; padding: 24px 32px; }
+.section { margin-bottom: 32px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+.grid-3-2 { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; }
+.grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; }
+hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+/* ════════════════════
+   SECTION HEADER
+════════════════════ */
+.section-hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.section-hd-bar {
+  width: 3px;
+  height: 18px;
+  background: var(--navy);
+  border-radius: 2px;
+}
+.section-hd-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.2px;
+}
+.section-hd-sub {
+  font-size: 11.5px;
+  color: var(--text-sub);
+  margin-left: 4px;
+}
+.section-hd-right { margin-left: auto; }
+
+/* ════════════════════
+   CARD
+════════════════════ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.card-title {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-sub);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.card-sm { padding: 14px 16px; }
+
+/* ════════════════════
+   KPI CARDS
+════════════════════ */
+.kpi {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+.kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  border-radius: 4px 0 0 4px;
+}
+.kpi.kpi-blue::before  { background: var(--accent); }
+.kpi.kpi-green::before { background: var(--green); }
+.kpi.kpi-red::before   { background: var(--red); }
+.kpi.kpi-yellow::before{ background: var(--yellow); }
+.kpi.kpi-purple::before{ background: var(--purple); }
+.kpi.kpi-orange::before{ background: var(--orange); }
+.kpi.kpi-navy::before  { background: var(--navy); }
+
+.kpi-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-sub);
+  letter-spacing: 0.3px;
+  margin-bottom: 8px;
+}
+.kpi-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-dark);
+  letter-spacing: -0.5px;
+  line-height: 1;
+  margin-bottom: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.kpi-change {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.kpi-desc { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.c-up     { color: var(--green); }
+.c-down   { color: var(--red); }
+.c-neutral{ color: var(--yellow); }
+.c-warn   { color: var(--orange); }
+.c-navy   { color: var(--navy); }
+
+/* ════════════════════
+   ANNOTATION BOXES
+════════════════════ */
+.note {
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-top: 14px;
+  font-size: 12px;
+  line-height: 1.75;
+}
+.note-blue {
+  background: var(--accent-lt);
+  border: 1px solid #c8dafc;
+  color: #2050a0;
+}
+.note-blue strong { color: var(--navy); }
+.note-green {
+  background: var(--green-bg);
+  border: 1px solid #b0dece;
+  color: #0a5c40;
+}
+.note-green strong { color: var(--green); }
+.note-red {
+  background: var(--red-bg);
+  border: 1px solid #f5c0bb;
+  color: #8b1a10;
+}
+.note-red strong { color: var(--red); }
+.note-yellow {
+  background: var(--yellow-bg);
+  border: 1px solid #f0d080;
+  color: #7a5010;
+}
+.note-yellow strong { color: var(--yellow); }
+.note-orange {
+  background: var(--orange-bg);
+  border: 1px solid #f5c090;
+  color: #7a3010;
+}
+.note-orange strong { color: var(--orange); }
+
+.note-tag {
+  display: inline-block;
+  background: var(--navy);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin-right: 6px;
+  letter-spacing: 0.3px;
+}
+
+/* ════════════════════
+   CHART WRAPPERS
+════════════════════ */
+.chart-wrap    { position: relative; height: 190px; width: 100%; }
+.chart-wrap-lg { position: relative; height: 250px; width: 100%; }
+.chart-wrap-sm { position: relative; height: 130px; width: 100%; }
+.chart-wrap-xs { position: relative; height: 90px; width: 100%; }
+
+/* ════════════════════
+   YIELD CURVE TABLE
+════════════════════ */
+.yield-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+}
+.yield-row:last-child { border-bottom: none; }
+.yield-tenor { width: 44px; font-size: 11.5px; color: var(--text-sub); font-weight: 500; }
+.yield-bar-wrap { flex: 1; height: 8px; background: var(--bg-light); border-radius: 4px; overflow: hidden; }
+.yield-bar { height: 100%; border-radius: 4px; transition: width 0.5s; }
+.yield-rate  { width: 52px; text-align: right; font-size: 13px; font-weight: 600; color: var(--text-dark); font-variant-numeric: tabular-nums; }
+.yield-label { width: 60px; text-align: right; font-size: 10.5px; color: var(--text-muted); }
+
+/* ════════════════════
+   LIQUIDITY FLOW
+════════════════════ */
+.liq-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 12px 0;
+}
+.liq-node {
+  flex: 1;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  text-align: center;
+  position: relative;
+}
+.liq-node.liq-result {
+  background: var(--navy-light);
+  border-color: #b0c8e8;
+}
+.liq-node .ln-label  { font-size: 10px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+.liq-node .ln-value  { font-size: 20px; font-weight: 700; color: var(--text-dark); margin-bottom: 2px; }
+.liq-node .ln-desc   { font-size: 10px; color: var(--text-muted); line-height: 1.4; }
+.liq-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.liq-arrow .arrow-icon { font-size: 16px; color: var(--text-muted); }
+.liq-arrow .arrow-label { font-size: 9px; color: var(--text-muted); text-align: center; line-height: 1.3; }
+
+/* ════════════════════
+   PHASE METER
+════════════════════ */
+.phase-meter {
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  height: 30px;
+  margin: 12px 0;
+}
+.phase-seg {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.7);
+  transition: all 0.3s;
+}
+.phase-active {
+  font-weight: 700 !important;
+  color: #fff !important;
+  outline: 2px solid rgba(255,255,255,0.5);
+  outline-offset: -3px;
+  font-size: 10.5px !important;
+}
+
+/* ════════════════════
+   TABLE
+════════════════════ */
+.ds-table { width: 100%; border-collapse: collapse; }
+.ds-table thead tr { background: var(--bg-light); }
+.ds-table th {
+  text-align: left;
+  padding: 9px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-sub);
+  letter-spacing: 0.4px;
+  border-bottom: 2px solid var(--border-md);
+  white-space: nowrap;
+}
+.ds-table td {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text-body);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.ds-table tbody tr:hover td { background: var(--bg-light); }
+.ds-table tbody tr:last-child td { border-bottom: none; }
+.sig-up     { color: var(--green); font-weight: 600; }
+.sig-down   { color: var(--red);   font-weight: 600; }
+.sig-neutral{ color: var(--yellow); font-weight: 600; }
+
+/* ════════════════════
+   CHECKLIST
+════════════════════ */
+.checklist { list-style: none; }
+.checklist li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+}
+.checklist li:last-child { border-bottom: none; }
+.ci {
+  width: 20px; height: 20px;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700;
+  flex-shrink: 0; margin-top: 1px;
+}
+.ci-ok  { background: var(--green-bg); color: var(--green); border: 1px solid #90d4b8; }
+.ci-warn{ background: var(--yellow-bg); color: var(--yellow); border: 1px solid #f0d080; }
+.ci-bad { background: var(--red-bg); color: var(--red); border: 1px solid #f5c0bb; }
+.ci-info{ background: var(--accent-lt); color: var(--accent); border: 1px solid #c8dafc; }
+.cl-title { font-weight: 600; color: var(--text-dark); display: block; margin-bottom: 2px; }
+.cl-desc  { font-size: 11px; color: var(--text-sub); line-height: 1.5; }
+
+/* ════════════════════
+   STATUS BADGES
+════════════════════ */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+}
+.badge-green  { background: var(--green-bg); color: var(--green); border:1px solid #90d4b8; }
+.badge-red    { background: var(--red-bg); color: var(--red); border:1px solid #f5c0bb; }
+.badge-yellow { background: var(--yellow-bg); color: var(--yellow); border:1px solid #f0d080; }
+.badge-blue   { background: var(--accent-lt); color: var(--accent); border:1px solid #c8dafc; }
+.badge-navy   { background: var(--navy-light); color: var(--navy); border:1px solid #b0c8e8; }
+.badge-orange { background: var(--orange-bg); color: var(--orange); border:1px solid #f5c090; }
+
+/* ════════════════════
+   VIX / MOVE SPECIFIC
+════════════════════ */
+.vix-gauge-wrap {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+}
+.vix-gauge {
+  flex: 1;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  text-align: center;
+}
+.vix-gauge .vg-label { font-size: 10px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.4px; }
+.vix-gauge .vg-value { font-size: 32px; font-weight: 700; margin: 6px 0 4px; }
+.vix-gauge .vg-zone  { font-size: 11px; font-weight: 600; }
+.vix-gauge .vg-desc  { font-size: 10px; color: var(--text-muted); margin-top: 4px; }
+
+.divergence-meter {
+  margin: 16px 0;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.dm-title { font-size: 11px; font-weight: 600; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px; }
+.dm-row   { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.dm-label { width: 100px; font-size: 11px; color: var(--text-body); }
+.dm-bar-wrap { flex: 1; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+.dm-bar   { height: 100%; border-radius: 5px; }
+.dm-val   { width: 55px; text-align: right; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ════════════════════
+   RESPONSIVE
+════════════════════ */
+@media (max-width: 1200px) {
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .grid-5 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4, .grid-5, .grid-3-2, .grid-2-1, .grid-1-2 { grid-template-columns: 1fr; }
+  .container { padding: 16px; }
+  .liq-flow { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     TOP NAV
+══════════════════════════════════════ -->
+<nav class="topnav">
+  <div class="topnav-brand">
+    <span class="brand-name">DS Asset Management</span>
+    <span class="brand-sub">DS MACRO JUNGLE</span>
+  </div>
+  <div class="topnav-right">
+    <div class="live-badge">
+      <span class="live-dot"></span>
+      <span>LIVE</span>
+    </div>
+    <span style="font-size:10px;color:var(--text-sub);margin-right:8px;" id="data-updated">데이터 로딩 중...</span>
+    <button onclick="loadLiveData()" style="font-size:10px;padding:4px 10px;background:var(--navy-light);border:1px solid var(--border-md);border-radius:4px;cursor:pointer;color:var(--navy);font-weight:600;">⟳ 새로고침</button>
+    <span class="clock" id="clock">—</span>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════
+     HERO BANNER
+══════════════════════════════════════ -->
+<div class="hero-banner">
+  <div class="hero-img-wrap">
+    <img
+      src="https://images.unsplash.com/photo-1448375240586-882707db888b?w=1600&auto=format&fit=crop&q=80"
+      alt="Macro Jungle"
+      class="hero-img"
+      onerror="this.parentElement.style.background='linear-gradient(135deg,#0f2347 0%,#1a3a6b 50%,#2a5298 100%)'"
+    />
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">DS Asset Management</div>
+    <div class="hero-title">
+      <span class="hero-ds">DS</span>
+      <span class="hero-macro"> MACRO</span>
+      <span class="hero-jungle"> JUNGLE</span>
+    </div>
+    <div class="hero-tagline">매크로 정글에서 살아남는 투자 프레임워크</div>
+    <div class="hero-meta">
+      <span class="hero-badge">🌿 Macro Framework</span>
+      <span class="hero-badge">📊 Fed Liquidity</span>
+      <span class="hero-badge">⚡ VIX · MOVE</span>
+      <span class="hero-badge">🌏 Global Cycle</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── 서브 네비게이션 ── -->
+<div class="subheader">
+  <a class="subnav-tab active" href="#" data-tab="tab-liquidity">유동성 프레임워크</a>
+  <a class="subnav-tab" href="#" data-tab="tab-rates">금리 모니터</a>
+  <a class="subnav-tab" href="#" data-tab="tab-vix">변동성 분석</a>
+  <a class="subnav-tab" href="#" data-tab="tab-inflation">인플레이션</a>
+  <a class="subnav-tab" href="#" data-tab="tab-cycle">경기사이클</a>
+  <a class="subnav-tab" href="#" data-tab="tab-global">글로벌 사이클</a>
+  <a class="subnav-tab" href="#" data-tab="tab-ycc">YCC / 엔캐리</a>
+  <a class="subnav-tab" href="#" data-tab="tab-credit">크레딧 리스크</a>
+  <a class="subnav-tab" href="#" data-tab="tab-skew">SKEW / 왜도</a>
+  <a class="subnav-tab" href="#" data-tab="tab-0dte">0DTE / 감마</a>
+  <a class="subnav-tab" href="#" data-tab="tab-strategy">전략 체크리스트</a>
+</div>
+
+
+<div class="container">
+
+<!-- ══════════════════════════════════════
+     SECTION 1 : 연준 유동성 삼각지대
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-liquidity">
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar"></div>
+    <span class="section-hd-title">연준 유동성 삼각지대 (Fed Liquidity Triangle)</span>
+    <span class="section-hd-sub">— 시중 유동성의 실제 수준을 결정하는 3대 핵심 지표</span>
+    <div class="section-hd-right">
+      <span class="badge badge-red">QT 진행 중</span>
+    </div>
+  </div>
+
+  <!-- KPI 5개 -->
+  <div class="grid-5" style="margin-bottom:16px;">
+    <div class="kpi kpi-navy">
+      <div class="kpi-label">연준 총자산 (Fed B/S)</div>
+      <div class="kpi-value c-navy" id="live-fed-balance">—</div>
+      <div class="kpi-change c-down" id="live-fed-balance-chg">QT 진행 중</div>
+      <div class="kpi-desc">QE 피크: $8.97T (2022)</div>
+    </div>
+    <div class="kpi kpi-yellow">
+      <div class="kpi-label">TGA 잔고 (재무부 계좌)</div>
+      <div class="kpi-value c-neutral" id="live-tga">—</div>
+      <div class="kpi-change c-warn">⚠ 부채한도 협상 시 급변</div>
+      <div class="kpi-desc">정상 목표: $500~750B</div>
+    </div>
+    <div class="kpi kpi-purple">
+      <div class="kpi-label">역레포(RRP) 잔고</div>
+      <div class="kpi-value" style="color:var(--purple);" id="live-rrp">—</div>
+      <div class="kpi-change c-down" id="live-rrp-chg">고점($2.5T) 대비 급감</div>
+      <div class="kpi-desc">잉여달러 완충재 소진 중</div>
+    </div>
+    <div class="kpi kpi-green">
+      <div class="kpi-label">순 시중 유동성 (추정)</div>
+      <div class="kpi-value c-up" id="live-net-liq">—</div>
+      <div class="kpi-change c-down">Fed자산 − TGA − RRP</div>
+      <div class="kpi-desc">주가와 높은 상관관계</div>
+    </div>
+    <div class="kpi kpi-red">
+      <div class="kpi-label">연방기금금리 (FFR)</div>
+      <div class="kpi-value c-down" id="live-ffr">—</div>
+      <div class="kpi-change c-neutral" id="live-ffr-chg">로딩 중...</div>
+      <div class="kpi-desc">목표: 물가 2.0% 복귀</div>
+    </div>
+  </div>
+
+  <!-- 유동성 흐름 다이어그램 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-title">유동성 흐름 구조 — TGA · RRP · 연준 자산의 관계</div>
+    <div class="liq-flow">
+      <div class="liq-node">
+        <div class="ln-label">미 재무부</div>
+        <div class="ln-value c-neutral">TGA 잔고</div>
+        <div class="ln-desc">국채 발행 → TGA 증가<br>→ 시중 달러 흡수 (긴축 효과)</div>
+      </div>
+      <div class="liq-arrow">
+        <span class="arrow-icon">→</span>
+        <span class="arrow-label">TGA 감소<br>= 지출 확대</span>
+      </div>
+      <div class="liq-node">
+        <div class="ln-label">연준 (Fed)</div>
+        <div class="ln-value c-navy">대차대조표</div>
+        <div class="ln-desc">QE: 자산 매입 → 달러 공급<br>QT: 자산 축소 → 달러 회수</div>
+      </div>
+      <div class="liq-arrow">
+        <span class="arrow-icon">←</span>
+        <span class="arrow-label">RRP 흡수<br>잉여달러 ↓</span>
+      </div>
+      <div class="liq-node">
+        <div class="ln-label">역레포 (RRP)</div>
+        <div class="ln-value" style="color:var(--purple);">잉여달러 주차</div>
+        <div class="ln-desc">MMF 등 갈 곳 없는 달러<br>→ 연준에 하룻밤 예치</div>
+      </div>
+      <div class="liq-arrow">
+        <span class="arrow-icon">=</span>
+        <span class="arrow-label">순 유동성</span>
+      </div>
+      <div class="liq-node liq-result">
+        <div class="ln-label">순 시중 유동성</div>
+        <div class="ln-value c-up">Fed − TGA − RRP</div>
+        <div class="ln-desc"><strong>주가와 높은 상관관계</strong><br>이 값이 줄면 자산가격 역풍</div>
+      </div>
+    </div>
+
+    <div class="note note-yellow">
+      <span class="note-tag">TGA 핵심 개념</span>
+      <strong>TGA(Treasury General Account)</strong> = 미국 재무부가 연준에 보유한 당좌계좌.<br>
+      재무부가 국채를 발행해 TGA를 채우면 시중 달러 감소 (숨겨진 긴축 효과 ↑) |
+      부채한도 협상 교착으로 TGA를 소진하면 시중 달러 증가 (숨겨진 QE 효과 ↑)<br>
+      <strong>즉, TGA 급감 구간 = 주가 단기 부양 가능 / TGA 급증 구간 = 유동성 흡수 주의</strong>
+    </div>
+    <div class="note note-blue" style="margin-top:8px;">
+      <span class="note-tag">RRP 핵심 개념</span>
+      <strong>RRP(역레포) 잔고가 높다</strong> = 시중 잉여달러 과잉 (완충재 역할) → 실질 유동성 충격 완화<br>
+      <strong>RRP 급소진</strong> = 완충재 고갈 → QT 효과가 시중에 직격 → 유동성 절벽 위험 신호
+    </div>
+  </div>
+
+  <!-- 연준 자산 & RRP 차트 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">연준 대차대조표 사이클 (QE ↔ QT)</div>
+      <div class="chart-wrap"><canvas id="fedBalChart"></canvas></div>
+      <div class="note note-blue">
+        <strong>읽는 법:</strong> 자산 팽창(QE) = 시중 달러 공급 → 자산가격 상승 동반.
+        자산 수축(QT) = 달러 흡수 → 자산가격 하방 압력. <strong>QT 시작 후 주가 하락이 가속된 18년 사례 참고.</strong>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">역레포(RRP) 잔고 추이 — 잉여 유동성 온도계</div>
+      <div class="chart-wrap"><canvas id="rrpChart"></canvas></div>
+      <div class="note note-orange">
+        <strong>경고 신호:</strong> RRP 잔고가 $0에 근접하면 더 이상 흡수 완충재가 없음
+        → QT + RRP 고갈 동시 발생 시 <strong>실질 유동성 충격</strong> 급발생 가능.
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /tab-liquidity -->
+
+<div class="tab-panel" id="tab-rates" style="display:none;">
+<!-- ══════════════════════════════════════
+     SECTION 2 : 금리 신호등
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar"></div>
+    <span class="section-hd-title">금리 신호등 — "정답은 채권시장에 있습니다"</span>
+    <span class="section-hd-sub">— 채권 금리는 경기의 방향을 주식보다 먼저 말한다</span>
+    <div class="section-hd-right">
+      <span class="badge badge-red">10-2Y 인버전 지속</span>
+    </div>
+  </div>
+
+  <div class="grid-3-2">
+    <div class="card">
+      <div class="card-title">미국 국채 수익률 곡선 (Yield Curve)</div>
+      <div style="margin-bottom:14px;">
+        <div class="yield-row">
+          <div class="yield-tenor">3M</div>
+          <div class="yield-bar-wrap"><div class="yield-bar" id="live-bar-3m" style="width:75%;background:#c0392b;"></div></div>
+          <div class="yield-rate c-down" id="live-us3m">—</div>
+          <div class="yield-label">단기 정책</div>
+        </div>
+        <div class="yield-row">
+          <div class="yield-tenor">2Y</div>
+          <div class="yield-bar-wrap"><div class="yield-bar" id="live-bar-2y" style="width:75%;background:#e67e22;"></div></div>
+          <div class="yield-rate c-warn" id="live-us2y">—</div>
+          <div class="yield-label">통화정책 반영</div>
+        </div>
+        <div class="yield-row">
+          <div class="yield-tenor">5Y</div>
+          <div class="yield-bar-wrap"><div class="yield-bar" id="live-bar-5y" style="width:75%;background:#f39c12;"></div></div>
+          <div class="yield-rate c-neutral" id="live-us5y">—</div>
+          <div class="yield-label">중기 성장</div>
+        </div>
+        <div class="yield-row">
+          <div class="yield-tenor">10Y</div>
+          <div class="yield-bar-wrap"><div class="yield-bar" id="live-bar-10y" style="width:75%;background:#27ae60;"></div></div>
+          <div class="yield-rate c-up" id="live-us10y">—</div>
+          <div class="yield-label">성장+물가</div>
+        </div>
+        <div class="yield-row">
+          <div class="yield-tenor">30Y</div>
+          <div class="yield-bar-wrap"><div class="yield-bar" id="live-bar-30y" style="width:75%;background:#2980b9;"></div></div>
+          <div class="yield-rate c-navy" id="live-us30y">—</div>
+          <div class="yield-label">장기 경제</div>
+        </div>
+      </div>
+
+      <!-- 10-2Y 스프레드 박스 -->
+      <div style="background:var(--red-bg);border:1px solid #f5c0bb;border-radius:var(--radius);padding:14px;display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:11px;color:var(--text-sub);font-weight:500;margin-bottom:4px;">10Y − 2Y 스프레드 (경기침체 선행지표)</div>
+          <div style="font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;" id="live-spread">—</div>
+          <div style="font-size:11px;margin-top:2px;" id="live-spread-desc">로딩 중...</div>
+        </div>
+        <div style="text-align:right;">
+          <span class="badge badge-red">⚠ 인버전</span>
+          <div style="font-size:10.5px;color:var(--text-sub);margin-top:6px;">역전 후 12~18개월<br>내 침체 확률 ↑</div>
+        </div>
+      </div>
+
+      <div class="note note-yellow">
+        <span class="note-tag">해석법</span>
+        <strong>단기금리↑(연준 긴축) + 장기금리↓(성장 둔화 베팅)</strong> → 스프레드 축소/역전<br>
+        결과: 시클리컬(경기민감) 약세, 테크 단기 방어적 강세(→ 동상이몽 주의)<br>
+        <strong>스프레드 역전이 해소될 때(가팔라질 때) 오히려 침체 진입 신호일 수 있음.</strong>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="card">
+        <div class="card-title">경기 사이클 위치</div>
+        <div class="phase-meter">
+          <div class="phase-seg" style="background:#2e7d32;">확장기</div>
+          <div class="phase-seg" style="background:#f57c00;">호황기</div>
+          <div class="phase-seg phase-active" style="background:#b71c1c;">긴축기 ◄</div>
+          <div class="phase-seg" style="background:#880e4f;">침체기</div>
+          <div class="phase-seg" style="background:#1565c0;">회복기</div>
+        </div>
+        <div style="font-size:10.5px;color:var(--text-sub);text-align:center;">현재: 금리인상 + QT 중첩 → 긴축기 후반</div>
+        <div class="chart-wrap-sm" style="margin-top:10px;"><canvas id="spreadChart"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">연방기금금리 인상 사이클</div>
+        <div class="chart-wrap-sm"><canvas id="ffChart"></canvas></div>
+        <div class="note note-blue" style="margin-top:8px;">
+          <strong>연준의 Forward Guidance 메커니즘:</strong><br>
+          구두 시그널 → 시장 Priced-in → 실제 결정 발표 순서.<br>
+          이 갭을 선점하는 것이 매크로 트레이딩의 핵심이다.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /tab-rates -->
+
+<div class="tab-panel" id="tab-vix" style="display:none;">
+<!-- ══════════════════════════════════════
+     SECTION 3 : VIX / MOVE 변동성 분석
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar"></div>
+    <span class="section-hd-title">변동성 신호 분석 — VIX · MOVE · HYG (동상이몽 탐지)</span>
+    <span class="section-hd-sub">— 주식과 채권 변동성이 서로 다른 방향을 보일 때 위험이 온다</span>
+    <div class="section-hd-right">
+      <span class="badge badge-yellow">동상이몽 경계</span>
+    </div>
+  </div>
+
+  <!-- VIX / MOVE 현황 게이지 -->
+  <div class="grid-2" style="margin-bottom:16px;">
+    <div class="card">
+      <div class="card-title">현재 변동성 레벨</div>
+      <div class="vix-gauge-wrap">
+        <div class="vix-gauge">
+          <div class="vg-label">VIX (주식시장 변동성)</div>
+          <div class="vg-value" id="live-vix">—</div>
+          <div class="vg-zone" id="live-vix-zone">로딩 중</div>
+          <div class="vg-desc">공포&탐욕 중간<br>10~20: 안정 / 20~30: 경계 / 30+: 공포</div>
+        </div>
+        <div class="vix-gauge">
+          <div class="vg-label">MOVE Index (채권 변동성)</div>
+          <div class="vg-value" id="live-move">—</div>
+          <div class="vg-zone" id="live-move-zone">로딩 중</div>
+          <div class="vg-desc">채권시장 불안<br>60이하: 안정 / 100+: 긴장 / 150+: 위기</div>
+        </div>
+        <div class="vix-gauge">
+          <div class="vg-label">HYG HV (하이일드 변동성)</div>
+          <div class="vg-value" id="live-hyg-hv">—</div>
+          <div class="vg-zone" id="live-hyg-hv-zone">로딩 중</div>
+          <div class="vg-desc"><strong>HV 10 이상 = 경기침체<br>관련 변동성 급변 신호</strong></div>
+        </div>
+      </div>
+
+      <!-- MOVE vs VIX 다이버전스 -->
+      <div class="divergence-meter">
+        <div class="dm-title">MOVE vs VIX 다이버전스 (동상이몽 지수)</div>
+        <div class="dm-row">
+          <div class="dm-label" style="color:var(--red);font-weight:600;">MOVE Index</div>
+          <div class="dm-bar-wrap"><div class="dm-bar" id="live-move-bar" style="width:50%;background:var(--red);"></div></div>
+          <div class="dm-val" id="live-move-dm">—</div>
+        </div>
+        <div class="dm-row">
+          <div class="dm-label" style="color:var(--green);font-weight:600;">VIX Index</div>
+          <div class="dm-bar-wrap"><div class="dm-bar" id="live-vix-bar" style="width:50%;background:var(--green);"></div></div>
+          <div class="dm-val" id="live-vix-dm">—</div>
+        </div>
+        <div style="margin-top:10px;padding:10px;background:var(--yellow-bg);border:1px solid #f0d080;border-radius:var(--radius);">
+          <span style="font-size:11.5px;color:var(--yellow);font-weight:700;">⚠ 동상이몽 감지 중</span>
+          <span style="font-size:11px;color:var(--text-body);margin-left:8px;">채권 공포(MOVE↑) vs 주식 낙관(VIX↓) — GFC 이후 최대 격차 수준</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">VIX vs MOVE Index 시계열 비교</div>
+      <div class="chart-wrap-lg"><canvas id="vixMoveChart"></canvas></div>
+      <div class="note note-red">
+        <span class="note-tag">핵심 신호</span>
+        S&P 상승 랠리 구간에서 MOVE 상승 + VIX 하락이 동시 발생하면 → <strong>동상이몽</strong><br>
+        "채권 무브인덱스와 주식 VIX 지표의 상승/하락 대비율이 GFC 이후 최고 수준"<br>
+        → 주가 상승이 통화정책 압박을 무시하고 있다는 신호 → <strong>더 강한 긴축의 빌미 제공</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- HYG & HV 설명 -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">HYG (하이일드 ETF) & Historic Volatility</div>
+      <div class="chart-wrap"><canvas id="hygChart"></canvas></div>
+      <div class="note note-orange">
+        <span class="note-tag">HV 10 법칙</span>
+        HYG의 <strong>Historic Volatility(HV)가 10 이상</strong>을 넘어가면 과거 모든 사례에서 경기둔화/침체 발생.<br>
+        HYG 가격이 하락(하이일드 스프레드 확대) = 기업 신용 부실 우려 = <strong>증시 압박 선행 신호</strong><br>
+        HYG 가격이 $85 이상 회복 시 → 주식 컨디션도 함께 개선 가능.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">변동성 국면별 포지션 전략</div>
+      <table class="ds-table">
+        <thead>
+          <tr>
+            <th>VIX 구간</th>
+            <th>MOVE</th>
+            <th>HYG HV</th>
+            <th>시장 국면</th>
+            <th>전략 방향</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-green">10~15</span></td>
+            <td class="sig-up">60 이하</td>
+            <td class="sig-up">5 이하</td>
+            <td>리스크온<br><span style="font-size:10px;color:var(--text-sub);">안도랠리</span></td>
+            <td style="color:var(--green);font-weight:600;">주식 비중 ↑<br>성장주 선호</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-yellow">15~25</span></td>
+            <td class="sig-neutral">80~110</td>
+            <td class="sig-neutral">5~10</td>
+            <td>혼조세<br><span style="font-size:10px;color:var(--text-sub);">동상이몽 구간</span></td>
+            <td style="color:var(--yellow);font-weight:600;">퀄리티 팩터<br>선별적 접근</td>
+          </tr>
+          <tr style="background:var(--red-bg);">
+            <td><span class="badge badge-orange">25~35</span></td>
+            <td class="sig-down">110~150</td>
+            <td class="sig-down">10~15</td>
+            <td><strong>⚠ 현재 구간</strong><br><span style="font-size:10px;color:var(--text-sub);">긴장 고조</span></td>
+            <td style="color:var(--orange);font-weight:600;">보험 비중 ↑<br>현금+단기채</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">35+</span></td>
+            <td class="sig-down">150+</td>
+            <td class="sig-down">15+</td>
+            <td>공황/위기<br><span style="font-size:10px;color:var(--text-sub);">GFC급 이벤트</span></td>
+            <td style="color:var(--red);font-weight:600;">방어적 전략<br>금·달러·국채</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note note-blue" style="margin-top:12px;">
+        <span class="note-tag">주간 변동성 경계</span>
+        주간 단위로 -4% 급락 후 +4% 급반등하는 구간 = 개인투자자가 위아래 모두 털리는 장.<br>
+        <strong>2018년 하반기 수준의 난이도</strong> — 방향보다 변동성 자체를 관리해야 한다.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /tab-vix -->
+
+<div class="tab-panel" id="tab-inflation" style="display:none;">
+<!-- ══════════════════════════════════════
+     SECTION 4 : 인플레이션 & 원자재
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar"></div>
+    <span class="section-hd-title">인플레이션 & 원자재 사이클</span>
+    <span class="section-hd-sub">— 원자재 → CPI → 연준 정책 → 금리 → 주가의 순서로 흘러간다</span>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:16px;">
+    <div class="kpi kpi-red">
+      <div class="kpi-label">CPI (전년비)</div>
+      <div class="kpi-value c-down" id="live-cpi">—</div>
+      <div class="kpi-change c-neutral">연준 목표 2.0% 대비</div>
+      <div class="kpi-desc">EODHD 매크로 데이터</div>
+    </div>
+    <div class="kpi kpi-yellow">
+      <div class="kpi-label">기대인플레(BEI 10Y)</div>
+      <div class="kpi-value c-neutral" id="live-bei">—</div>
+      <div class="kpi-change c-up">FRED T10YIE</div>
+      <div class="kpi-desc">채권시장의 중장기 물가 전망</div>
+    </div>
+    <div class="kpi kpi-orange">
+      <div class="kpi-label">WTI (USO ETF)</div>
+      <div class="kpi-value c-warn" id="live-wti">—</div>
+      <div class="kpi-change c-neutral" id="live-real-rate-desc">실질금리: —</div>
+      <div class="kpi-desc">10Y − BEI = 실질금리</div>
+    </div>
+    <div class="kpi kpi-blue">
+      <div class="kpi-label">달러인덱스 (DXY)</div>
+      <div class="kpi-value c-down" id="live-dxy">—</div>
+      <div class="kpi-change c-down">강달러 → 신흥국 자금 이탈</div>
+      <div class="kpi-desc">DXY.INDX (EODHD)</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">인플레이션 & 기대인플레 추이 <span style="font-size:10px;background:var(--green-bg);color:var(--green);border:1px solid #90d4b8;border-radius:4px;padding:2px 6px;margin-left:6px;">FRED 실데이터</span></div>
+      <div class="chart-wrap"><canvas id="inflChart"></canvas></div>
+      <div class="note note-orange">
+        <span class="note-tag">원자재 해석</span>
+        <strong>원유가격이 고점에서 보합이면 "진짜 하락"으로 보지 마라.</strong><br>
+        백워데이션(선물 &lt; 현물)이 유지되는 한 수급 타이트 = 투기수요 재유입 가능.<br>
+        Core CPI 하락 시 시장은 "긴축 끝"으로 해석 → 유가가 이를 비웃으며 반등 → 다시 CPI 상승 루프.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">달러인덱스(DXY) & WTI 원유</div>
+      <div class="chart-wrap"><canvas id="dxyChart"></canvas></div>
+      <div class="note note-red">
+        <span class="note-tag">94년 레퍼런스</span>
+        강달러 → 신흥국 외채 부담 급증 → 외화 유출 → 신흥국 금융위기.<br>
+        <strong>94년 채권 대학살 → 97년 아시아 IMF(한국 포함) 도미노.</strong><br>
+        DXY 104 돌파 = 20년만 최고치 → 신흥국 익스포저 경계 필수.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /tab-inflation -->
+
+<!-- ══════════════════════════════════════
+     TAB : 경기사이클
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-cycle" style="display:none;">
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar" style="background:#0a875a;"></div>
+    <span class="section-hd-title">경기사이클 — PMI / 고용 / 스태그플레이션 프레임워크</span>
+    <span class="section-hd-sub">— 제조업 PMI 50 돌파 여부가 경기 확장·수축의 경계선</span>
+  </div>
+
+  <!-- 핵심 사이클 지표 -->
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="card" style="border-top:3px solid var(--green);">
+      <div class="card-title" style="color:var(--green);">ISM 제조업 PMI <span style="font-size:10px;background:var(--green-bg);color:var(--green);border:1px solid #90d4b8;border-radius:4px;padding:2px 6px;margin-left:6px;">Google News 자동수집</span></div>
+      <div style="text-align:center;padding:12px 0;">
+        <div style="font-size:48px;font-weight:800;color:var(--yellow);" id="live-pmi">—</div>
+        <div style="font-size:11px;color:var(--text-sub);margin-top:4px;" id="live-pmi-desc">로딩 중...</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <div style="flex:1;background:var(--red-bg);border-radius:var(--radius);padding:8px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-sub);">전월</div>
+          <div style="font-size:16px;font-weight:700;color:var(--red);">47.8</div>
+        </div>
+        <div style="flex:1;background:var(--yellow-bg);border-radius:var(--radius);padding:8px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-sub);">확장/수축 기준</div>
+          <div style="font-size:16px;font-weight:700;color:var(--yellow);">50.0</div>
+        </div>
+        <div style="flex:1;background:var(--green-bg);border-radius:var(--radius);padding:8px;text-align:center;">
+          <div style="font-size:10px;color:var(--text-sub);">서비스 PMI</div>
+          <div style="font-size:16px;font-weight:700;color:var(--green);">52.7</div>
+        </div>
+      </div>
+      <div class="note note-yellow">
+        <span class="note-tag">경기신호</span>
+        제조업 PMI &lt;50 + 서비스 PMI 유지 = <strong>제조업 주도 침체 경계</strong>. EPS 하락 선행.
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--navy);">
+      <div class="card-title">NFP / 고용 사이클</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin:8px 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:var(--radius);">
+          <div>
+            <div style="font-size:12px;font-weight:600;">비농업 고용(NFP)</div>
+            <div style="font-size:10px;color:var(--text-sub);">전월 대비 신규 일자리</div>
+          </div>
+          <div style="font-size:22px;font-weight:700;" id="live-nfp">—</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:var(--radius);">
+          <div>
+            <div style="font-size:12px;font-weight:600;">실업률</div>
+            <div style="font-size:10px;color:var(--text-sub);">U-3 기준 (FRED)</div>
+          </div>
+          <div style="font-size:22px;font-weight:700;" id="live-unemployment">—</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:var(--radius);">
+          <div>
+            <div style="font-size:12px;font-weight:600;">JOLTS 구인건수</div>
+            <div style="font-size:10px;color:var(--text-sub);">노동시장 타이트함 지표</div>
+          </div>
+          <div style="font-size:22px;font-weight:700;" id="live-jolts">—</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg);border-radius:var(--radius);">
+          <div>
+            <div style="font-size:12px;font-weight:600;">신규 실업수당청구</div>
+            <div style="font-size:10px;color:var(--text-sub);">주간 지표 (경기침체 선행)</div>
+          </div>
+          <div style="font-size:22px;font-weight:700;" id="live-jobless">—</div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red);">
+      <div class="card-title" style="color:var(--red);">스태그플레이션 진단</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;margin-bottom:10px;">
+        2022년 이후 환경은 <strong>공급발 인플레이션 + 수요 둔화</strong>의 복합 구조. 단순 금리 인상으로는 해결 불가능한 공급망 제약·에너지 쇼크 성격이 강하다. 1970s 스태그플레이션 유사도 최고.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--red-bg);border-radius:var(--radius);">
+          <span style="font-size:12px;color:var(--text-dark);">인플레이션 지속</span>
+          <span class="badge badge-red">진행 중</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--yellow-bg);border-radius:var(--radius);">
+          <span style="font-size:12px;color:var(--text-dark);">성장 둔화</span>
+          <span class="badge badge-yellow">경계</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--yellow-bg);border-radius:var(--radius);">
+          <span style="font-size:12px;color:var(--text-dark);">고용 냉각</span>
+          <span class="badge badge-yellow">진행 중</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--red-bg);border-radius:var(--radius);">
+          <span style="font-size:12px;color:var(--text-dark);">기업 이익 압박</span>
+          <span class="badge badge-red">진행 중</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PMI vs SPX 차트 + 고용 선행지표 차트 -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">ISM 제조업 PMI vs SPX EPS 성장률 <span style="font-size:10px;background:var(--yellow-bg);color:var(--yellow);border:1px solid #f0d080;border-radius:4px;padding:2px 6px;margin-left:6px;">수동업데이트</span></div>
+      <div style="height:240px;"><canvas id="pmiEpsChart"></canvas></div>
+      <div class="note note-blue" style="margin-top:8px;">
+        <span class="note-tag">선행관계</span>
+        PMI 선행 3~6개월 후 EPS 반영. <strong>PMI 50 돌파 = 어닝 반등 신호</strong>.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">신규 실업수당 청구 vs 경기침체 구간 (2019–2024)</div>
+      <div style="height:240px;"><canvas id="joblessChart"></canvas></div>
+      <div class="note note-red" style="margin-top:8px;">
+        <span class="note-tag">침체 신호</span>
+        주간 청구 <strong>300K+ 지속 = 침체 확인</strong>. 1969년 저점 이후 반등 패턴 모니터링 필수.
+      </div>
+    </div>
+  </div>
+
+  <!-- 경기사이클 4국면 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title">경기사이클 4국면 — 현재 위치</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;">
+      <div style="background:var(--green-bg);border:2px solid var(--green);border-radius:var(--radius-lg);padding:14px;text-align:center;">
+        <div style="font-size:10px;color:var(--green);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">PHASE 1 — 회복</div>
+        <div style="font-size:11px;color:var(--text-body);">PMI 상승 · 금리 인하<br>성장주·소재 강세</div>
+      </div>
+      <div style="background:var(--accent-lt);border:2px solid var(--accent);border-radius:var(--radius-lg);padding:14px;text-align:center;">
+        <div style="font-size:10px;color:var(--accent);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">PHASE 2 — 확장</div>
+        <div style="font-size:11px;color:var(--text-body);">PMI 고점권 · 금리 상승<br>경기민감주·에너지 강세</div>
+      </div>
+      <div style="background:var(--yellow-bg);border:2px dashed var(--yellow);border-radius:var(--radius-lg);padding:14px;text-align:center;position:relative;">
+        <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--yellow);color:#fff;font-size:10px;font-weight:700;padding:2px 10px;border-radius:10px;">현재 ▼</div>
+        <div style="font-size:10px;color:var(--yellow);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">PHASE 3 — 둔화</div>
+        <div style="font-size:11px;color:var(--text-body);">PMI 하락 · 금리 고점<br>방어주·채권 강세</div>
+      </div>
+      <div style="background:var(--red-bg);border:2px solid var(--red);border-radius:var(--radius-lg);padding:14px;text-align:center;">
+        <div style="font-size:10px;color:var(--red);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;">PHASE 4 — 수축</div>
+        <div style="font-size:11px;color:var(--text-body);">PMI 50 이하 · 금리 인하<br>현금·금·단기채 강세</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 역사적 스태그플레이션 비교 -->
+  <div class="card">
+    <div class="card-title">스태그플레이션 — 1970s vs 2022 비교</div>
+    <table class="data-table" style="margin-top:8px;">
+      <thead><tr><th>구분</th><th>1970s</th><th>2022~현재</th><th>유사도</th></tr></thead>
+      <tbody>
+        <tr><td>인플레이션 원인</td><td>오일쇼크 (공급발)</td><td>코로나 공급망 + 에너지 (공급발)</td><td><span class="badge badge-red">★★★★★</span></td></tr>
+        <tr><td>연준 대응</td><td>뒤늦은 볼커 긴축</td><td>뒤늦은 파월 긴축 (2022.03~)</td><td><span class="badge badge-red">★★★★★</span></td></tr>
+        <tr><td>노동시장</td><td>완전고용 + 임금상승</td><td>역대급 타이트 + 임금상승</td><td><span class="badge badge-orange">★★★★☆</span></td></tr>
+        <tr><td>채권·주식 동반 하락</td><td>60/40 포트폴리오 붕괴</td><td>2022년 60/40 역대 최악</td><td><span class="badge badge-red">★★★★★</span></td></tr>
+        <tr><td>해법</td><td>볼커 20% 고금리 → 결국 침체</td><td>연준 5.5%+ → 결과 미정</td><td><span class="badge badge-yellow">★★★☆☆</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note note-red" style="margin-top:10px;">
+      <span class="note-tag">핵심 관점</span>
+      <strong>"인플레이션은 시작도 안 했을 가능성이 크다"</strong> — 공급 제약이 구조적이라면 금리 인하 후에도 재발 가능. 섣부른 피봇 = 2차 인플레 리스크.
+    </div>
+  </div>
+</div>
+</div><!-- /tab-cycle -->
+
+<div class="tab-panel" id="tab-global" style="display:none;">
+<!-- ══════════════════════════════════════
+     SECTION 5 : 중국 사이클
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar"></div>
+    <span class="section-hd-title">중국 정책 사이클 — 미국과 역방향으로 움직이는 엔진</span>
+    <span class="section-hd-sub">— 미국 긴축 중 중국 완화 → 중국이 부양에 나서면 신흥국·원자재 강세</span>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">중국 주요 정책금리</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg-light);border:1px solid var(--border);border-radius:var(--radius);">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text-dark);">LPR 1년물</div>
+            <div style="font-size:10.5px;color:var(--text-sub);">주택담보대출 우대금리 — 인민은행 정책 의지 반영</div>
+          </div>
+          <div style="font-size:24px;font-weight:700;color:var(--green);">3.45%</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg-light);border:1px solid var(--border);border-radius:var(--radius);">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text-dark);">LPR 5년물</div>
+            <div style="font-size:10.5px;color:var(--text-sub);">장기 모기지 기준 — 부동산 경기 부양 핵심 수단</div>
+          </div>
+          <div style="font-size:24px;font-weight:700;color:var(--green);">3.95%</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bg-light);border:1px solid var(--border);border-radius:var(--radius);">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text-dark);">MLF 1년 (중기유동성지원창구)</div>
+            <div style="font-size:10.5px;color:var(--text-sub);">MLF 동결 → LPR 동결 예측 선행지표</div>
+          </div>
+          <div style="font-size:24px;font-weight:700;color:var(--yellow);">2.50%</div>
+        </div>
+      </div>
+      <div class="note note-green">
+        <span class="note-tag">중국 프레임</span>
+        LPR 인하 = 부양 의지 → 항셍·A주 반등 신호 → 원자재(구리·철광석) 수요 증가 → KOSPI 수혜<br>
+        MLF 동결이면 LPR도 동결 → 단기 실망매물 출회 가능<br>
+        <strong>중국이 칼을 뽑으면</strong> 미국과의 통화정책 다이버전스 확대 → 위안화 약세 감수하며 부양.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">중국 vs 미국 통화정책 다이버전스 <span style="font-size:10px;background:var(--green-bg);color:var(--green);border:1px solid #90d4b8;border-radius:4px;padding:2px 6px;margin-left:6px;">CFETS 자동수집</span> <span id="live-lpr-badge" style="font-size:10px;color:var(--text-sub);margin-left:4px;"></span></div>
+      <div class="chart-wrap-lg"><canvas id="chinaChart"></canvas></div>
+      <div class="note note-blue">
+        <span class="note-tag">지정학 프레임</span>
+        중국·러시아·인도 진영의 달러 결제 탈피 시도 → <strong>장기 달러 헤게모니 약화 리스크</strong><br>
+        단기: 달러 강세 유지 / 장기: 탈달러 구조 변화를 동시에 추적해야 함.<br>
+        BRICs 에너지·원자재 블록 형성 시 글로벌 인플레이션 구조 변화.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SECTION 6 : 역사적 레퍼런스
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar"></div>
+    <span class="section-hd-title">역사적 사이클 레퍼런스</span>
+    <span class="section-hd-sub">— "현재는 1970s 스태그플레이션 + 1994 + 2000 + 2008이 중첩된 복합 시계열"</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">현재와 유사한 역사적 국면 비교</div>
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th>시기</th>
+          <th>핵심 구도</th>
+          <th>연준 정책</th>
+          <th>결과</th>
+          <th>현재 유사도</th>
+          <th>비고</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:700;color:var(--navy);">1970~80s</td>
+          <td>오일쇼크 + 공급망 물가<br><span style="font-size:10px;color:var(--text-sub);">스태그플레이션 기준</span></td>
+          <td>볼커 초고금리 (20%)</td>
+          <td class="sig-down">경기침체 + 자산폭락</td>
+          <td><span class="badge badge-orange">★★★★☆</span></td>
+          <td style="font-size:11px;">공급발 인플레 구조 동일</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;color:var(--orange);">1994년</td>
+          <td>채권 대학살<br><span style="font-size:10px;color:var(--text-sub);">예상 외 인상 속도</span></td>
+          <td>1년 7회 (3%→6%)</td>
+          <td class="sig-down">신흥국 도미노 → 97년 IMF</td>
+          <td><span class="badge badge-orange">★★★★☆</span></td>
+          <td style="font-size:11px;font-weight:600;color:var(--red);">강달러 → 한국 직격 레퍼런스</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;color:var(--red);">2000년</td>
+          <td>IT 버블 붕괴<br><span style="font-size:10px;color:var(--text-sub);">밸류에이션 과잉</span></td>
+          <td>인상 후 급격 인하</td>
+          <td class="sig-down">나스닥 −78%, 3년 하락</td>
+          <td><span class="badge badge-yellow">★★★☆☆</span></td>
+          <td style="font-size:11px;">현재 테크 밸류에이션 버블 요소</td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;color:var(--red);">2008년</td>
+          <td>금융 레버리지 붕괴<br><span style="font-size:10px;color:var(--text-sub);">은행권 연쇄 디폴트</span></td>
+          <td>긴급 인하 + QE 도입</td>
+          <td class="sig-down">글로벌 금융위기 S&P −57%</td>
+          <td><span class="badge badge-yellow">★★☆☆☆</span></td>
+          <td style="font-size:11px;">유럽 은행권 익스포저 시 유사</td>
+        </tr>
+        <tr style="background:var(--accent-lt);">
+          <td style="font-weight:700;color:var(--navy);">2018년 ★</td>
+          <td>금리인상 + QT 동시<br><span style="font-size:10px;color:var(--text-sub);">가장 직접적 레퍼런스</span></td>
+          <td>9회 인상 + QT</td>
+          <td class="sig-down">Q4 2018 S&P −20% → 피봇</td>
+          <td><span class="badge badge-green">★★★★★</span></td>
+          <td style="font-size:11px;font-weight:600;color:var(--green);">QT 가속 후 급락 패턴 참고</td>
+        </tr>
+        <tr style="background:var(--yellow-bg);">
+          <td style="font-weight:700;color:var(--yellow);">현재 ▶</td>
+          <td><strong>위 5개 구간 복합 중첩</strong><br><span style="font-size:10px;color:var(--text-sub);">"비교 자체가 불가능한 수준"</span></td>
+          <td>급격한 인상 + QT + 지정학</td>
+          <td class="sig-neutral">진행 중...</td>
+          <td><span class="badge badge-yellow">COMPLEX</span></td>
+          <td style="font-size:11px;font-weight:600;">복합 위기 = 더 큰 진폭.<br>보험(현금·금·단기채) 필수.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /tab-global -->
+
+<!-- ══════════════════════════════════════
+     TAB : YCC / 엔캐리
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-ycc" style="display:none;">
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar" style="background:#c05621;"></div>
+    <span class="section-hd-title">일본 YCC &amp; 엔 캐리 트레이드 — 글로벌 유동성의 숨은 엔진</span>
+    <span class="section-hd-sub">— BOJ 정책 전환 = 캐리 청산 → 전 세계 위험자산 동반 급락</span>
+  </div>
+
+  <!-- YCC 개념 카드 3개 -->
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="card" style="border-top:3px solid var(--orange);">
+      <div class="card-title" style="color:var(--orange);">YCC란? (Yield Curve Control)</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;margin-bottom:10px;">
+        BOJ가 10년물 JGB 금리를 <strong>목표 밴드 내에 강제 고정</strong>하는 비전통적 통화정책.
+        글로벌 금리 상승기에도 일본 장기금리를 인위적으로 억제 → 엔화 약세 + 캐리 트레이드 유인 극대화.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--orange-bg);border-radius:var(--radius);">
+          <span>BOJ 정책금리</span><span style="font-weight:700;color:var(--orange);">0.50% <span style="font-size:10px;color:rgba(255,255,255,0.6);">(수동)</span></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--bg);border-radius:var(--radius);">
+          <span>JP 10Y JGB</span><span style="font-weight:700;" id="live-jp10y">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--bg);border-radius:var(--radius);">
+          <span>미국 10Y 국채</span><span style="font-weight:700;color:var(--red);" id="live-us10y-ycc">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--red-bg);border-radius:var(--radius);">
+          <span style="font-weight:600;">미-일 금리차</span><span style="font-weight:700;color:var(--red);" id="live-jpn-spread">—</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--navy);">
+      <div class="card-title">엔 캐리 트레이드 구조</div>
+      <div style="font-size:12px;color:var(--text-body);line-height:1.8;margin-top:8px;">
+        <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;">
+          <span style="background:var(--orange);color:#fff;border-radius:50%;width:20px;height:20px;min-width:20px;display:flex;align-items:center;justify-content:center;font-size:10px;">1</span>
+          <span>BOJ에서 <strong>초저금리(~0%)로 엔화 차입</strong></span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;">
+          <span style="background:var(--orange);color:#fff;border-radius:50%;width:20px;height:20px;min-width:20px;display:flex;align-items:center;justify-content:center;font-size:10px;">2</span>
+          <span>엔화 → 달러 환전 후 <strong>미국 채권·주식·부동산 투자</strong></span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;">
+          <span style="background:var(--green);color:#fff;border-radius:50%;width:20px;height:20px;min-width:20px;display:flex;align-items:center;justify-content:center;font-size:10px;">3</span>
+          <span>금리차 3%+ + 엔화 약세 = <strong>이중 수익 (캐리+FX)</strong></span>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:8px;">
+          <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;min-width:20px;display:flex;align-items:center;justify-content:center;font-size:10px;">!</span>
+          <span>BOJ 긴축 → 엔화 강세 → <strong>캐리 강제 청산 → 전 세계 매도</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red);">
+      <div class="card-title" style="color:var(--red);">캐리 청산 리스크 지표</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;margin-bottom:10px;">
+        BOJ가 YCC 밴드를 확대하거나 마이너스 금리를 해제할 경우 캐리 청산 연쇄가 발생. 규모가 수백조 엔에 달해 <strong>글로벌 유동성 충격</strong>으로 전이된다.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--bg);border-radius:var(--radius);font-size:12px;">
+          <span>USD/JPY 환율</span><span style="font-weight:700;color:var(--red);" id="live-usdjpy">—</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--red-bg);border-radius:var(--radius);font-size:12px;">
+          <span>경보 수준</span><span style="font-weight:700;color:var(--red);">145+ = 개입 위험</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--orange-bg);border-radius:var(--radius);font-size:12px;">
+          <span>캐리 청산 트리거</span><span style="font-weight:700;color:var(--orange);">BOJ 밴드 재조정</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USD/JPY + 미일 금리차 차트 -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">USD/JPY vs 미-일 10Y 금리차 (2022–2024)</div>
+      <div style="height:250px;"><canvas id="yccCarryChart"></canvas></div>
+      <div class="note note-red" style="margin-top:8px;">
+        <span class="note-tag">핵심 신호</span>
+        금리차 확대 → 엔 약세 → 캐리 심화. <strong>금리차 역전 = 캐리 청산 시작</strong>.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">BOJ YCC 밴드 조정 이력 (글로벌 충격 이벤트)</div>
+      <div style="height:250px;"><canvas id="yccBandChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- YCC 모니터링 프레임워크 -->
+  <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,var(--orange-bg),var(--yellow-bg));">
+    <div class="card-title" style="color:var(--navy-dark);">YCC / 엔캐리 모니터링 프레임워크</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px;">
+      <div style="background:#fff;border-radius:var(--radius);padding:14px;">
+        <div style="font-size:10px;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">WATCH 1 — BOJ 회의</div>
+        <ul style="font-size:12px;color:var(--text-body);padding-left:14px;line-height:1.8;">
+          <li>YCC 밴드 확대 발표</li>
+          <li>마이너스 금리 해제 시그널</li>
+          <li>ETF 매입 축소 발표</li>
+        </ul>
+        <div style="margin-top:8px;font-size:11px;color:var(--orange);font-weight:600;">→ 즉시 엔 강세 + 캐리 청산 경보</div>
+      </div>
+      <div style="background:#fff;border-radius:var(--radius);padding:14px;">
+        <div style="font-size:10px;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">WATCH 2 — FX 모니터링</div>
+        <ul style="font-size:12px;color:var(--text-body);padding-left:14px;line-height:1.8;">
+          <li>USD/JPY &gt; 145 → 일본 개입 경고</li>
+          <li>USD/JPY 급락 3% 이상 = 청산 시작</li>
+          <li>엔화 변동성(JVX) 급등 확인</li>
+        </ul>
+        <div style="margin-top:8px;font-size:11px;color:var(--red);font-weight:600;">→ VIX 연동 상승 여부 동시 확인</div>
+      </div>
+      <div style="background:#fff;border-radius:var(--radius);padding:14px;">
+        <div style="font-size:10px;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">WATCH 3 — 크로스에셋</div>
+        <ul style="font-size:12px;color:var(--text-body);padding-left:14px;line-height:1.8;">
+          <li>엔 강세 + SPX 하락 동반</li>
+          <li>EM 통화 약세 (캐리 청산 전파)</li>
+          <li>미국 국채 수익률 급락 (안전자산)</li>
+        </ul>
+        <div style="margin-top:8px;font-size:11px;color:var(--navy);font-weight:600;">→ 포지션 전면 축소 국면</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /tab-ycc -->
+
+<!-- ══════════════════════════════════════
+     TAB : 크레딧 리스크
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-credit" style="display:none;">
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar" style="background:#6b46c1;"></div>
+    <span class="section-hd-title">크레딧 리스크 — 은행권 스트레스 &amp; 신용스프레드 프레임워크</span>
+    <span class="section-hd-sub">— SVB 붕괴가 보여준 듀레이션 리스크 · IG/HY 스프레드 확대 = 신용경색 신호</span>
+  </div>
+
+  <!-- 크레딧 지표 카드 -->
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="card" style="border-top:3px solid var(--purple);">
+      <div class="card-title" style="color:var(--purple);">IG 크레딧 스프레드 (OAS)</div>
+      <div style="text-align:center;padding:12px 0;">
+        <div style="font-size:48px;font-weight:800;color:var(--yellow);" id="live-ig-oas">—</div>
+        <div style="font-size:11px;color:var(--text-sub);">Investment Grade 가산금리</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-body);line-height:1.8;">
+        <div style="display:flex;justify-content:space-between;padding:5px 8px;background:var(--green-bg);border-radius:var(--radius);margin-bottom:4px;">
+          <span>정상 구간</span><span style="color:var(--green);font-weight:600;">&lt;125bp</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:5px 8px;background:var(--yellow-bg);border-radius:var(--radius);margin-bottom:4px;">
+          <span>경계 구간</span><span style="color:var(--yellow);font-weight:600;">125~200bp</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:5px 8px;background:var(--red-bg);border-radius:var(--radius);">
+          <span>위기 구간</span><span style="color:var(--red);font-weight:600;">200bp+</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red);">
+      <div class="card-title" style="color:var(--red);">HY 크레딧 스프레드 (OAS)</div>
+      <div style="text-align:center;padding:12px 0;">
+        <div style="font-size:48px;font-weight:800;color:var(--red);" id="live-hy-oas">—</div>
+        <div style="font-size:11px;color:var(--text-sub);">High Yield 가산금리</div>
+      </div>
+      <div style="font-size:12px;color:var(--text-body);line-height:1.8;">
+        <div style="display:flex;justify-content:space-between;padding:5px 8px;background:var(--green-bg);border-radius:var(--radius);margin-bottom:4px;">
+          <span>정상</span><span style="color:var(--green);font-weight:600;">&lt;350bp</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:5px 8px;background:var(--yellow-bg);border-radius:var(--radius);margin-bottom:4px;">
+          <span>경계</span><span style="color:var(--yellow);font-weight:600;">350~500bp</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:5px 8px;background:var(--red-bg);border-radius:var(--radius);">
+          <span>위기 (GFC 수준)</span><span style="color:var(--red);font-weight:600;">800bp+</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--navy);">
+      <div class="card-title">SVB 사태 — 듀레이션 리스크 교훈</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;margin-bottom:10px;">
+        2023년 3월 SVB 파산은 단순 부실이 아니라 <strong>금리 상승으로 인한 장기채 평가손실</strong>이 트리거. QT·금리 인상 환경에서 장기채 보유 은행의 시스템 리스크.
+      </p>
+      <div style="display:flex;flex-direction:column;gap:5px;font-size:12px;">
+        <div style="padding:7px 10px;background:var(--red-bg);border-radius:var(--radius);color:var(--red);">
+          <strong>메커니즘:</strong> 금리↑ → 장기채 평가손↓ → 예금 인출 → 강제 매각 → 손실 현실화 → 뱅크런
+        </div>
+        <div style="padding:7px 10px;background:var(--yellow-bg);border-radius:var(--radius);color:var(--yellow);">
+          <strong>전파:</strong> SVB → Signature → CS → AT1 채권 시장 충격
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IG/HY 스프레드 차트 + Reverse Twist -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">IG / HY 크레딧 스프레드 추이 (2022–2024)</div>
+      <div style="height:250px;"><canvas id="creditSpreadChart"></canvas></div>
+      <div class="note note-red" style="margin-top:8px;">
+        <span class="note-tag">경고 패턴</span>
+        HY 스프레드 500bp 돌파 + IG 스프레드 확대 동반 = <strong>신용경색 공식화</strong>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Reverse Twist (RT) — 수익률 곡선 강제 정상화 전략</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;margin-bottom:12px;">
+        블러드(St. Louis Fed) 제안. 장단기 역전(인버전) 지속 시 연준이 직접 개입해 곡선을 강제 정상화하는 비전통적 QT 변형 전략.
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;">
+        <div style="background:var(--red-bg);border-radius:var(--radius);padding:10px;">
+          <div style="font-size:10px;color:var(--text-sub);margin-bottom:6px;">Operation Twist (2011)</div>
+          <div style="color:var(--text-dark);">단기채 <span style="color:var(--red);font-weight:600;">매도</span><br>장기채 <span style="color:var(--green);font-weight:600;">매수</span><br>→ 장기금리 ↓</div>
+        </div>
+        <div style="background:var(--accent-lt);border-radius:var(--radius);padding:10px;">
+          <div style="font-size:10px;color:var(--text-sub);margin-bottom:6px;">Reverse Twist (RT 제안)</div>
+          <div style="color:var(--text-dark);">장기채 <span style="color:var(--red);font-weight:600;">매도</span><br>단기채 <span style="color:var(--green);font-weight:600;">매수</span><br>→ 장기금리 ↑, 단기 ↓</div>
+        </div>
+      </div>
+      <div class="note note-blue" style="margin-top:10px;">
+        <span class="note-tag">RT 목적</span>
+        수익률 곡선 역전(인버전) 해소 → 은행 수익성 회복 → 신용 공급 정상화
+      </div>
+    </div>
+  </div>
+
+  <!-- 크레딧 리스크 체크리스트 + 부채한도 -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">크레딧 리스크 모니터링 체크리스트</div>
+      <ul class="checklist" style="margin-top:8px;">
+        <li>
+          <div class="ci ci-warn">△</div>
+          <div><span class="cl-title">IG OAS 125bp 돌파 여부</span>
+          <span class="cl-desc">125bp 이상 = 기업 차입비용 급등 → 투자·고용 감소 → 경기 역풍</span></div>
+        </li>
+        <li>
+          <div class="ci ci-bad">✗</div>
+          <div><span class="cl-title">HY 스프레드 500bp 근접</span>
+          <span class="cl-desc">500bp 이상 = 정크본드 시장 기능 훼손. 하이일드 발행 중단 → 레버리지 기업 유동성 위기</span></div>
+        </li>
+        <li>
+          <div class="ci ci-info">▷</div>
+          <div><span class="cl-title">은행권 예금 유출 지표</span>
+          <span class="cl-desc">Fed H.8 주간 데이터. 예금 급감 = SVB형 유동성 위기 초기 신호</span></div>
+        </li>
+        <li>
+          <div class="ci ci-warn">△</div>
+          <div><span class="cl-title">AT1(코코본드) 스프레드</span>
+          <span class="cl-desc">CS 사태 이후 AT1 스프레드 급등 = 유럽 은행 시스템 스트레스 신호</span></div>
+        </li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">부채한도(Debt Ceiling) X-date 메커니즘</div>
+      <div style="font-size:12px;color:var(--text-body);line-height:1.8;margin-top:6px;">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="padding:8px 10px;background:var(--bg);border-radius:var(--radius);">
+            <span style="color:var(--navy);font-weight:600;">① X-date 접근</span><br>
+            TGA 잔고 소진 → 정부 지출 제한 → 단기 유동성 공백
+          </div>
+          <div style="padding:8px 10px;background:var(--yellow-bg);border-radius:var(--radius);">
+            <span style="color:var(--yellow);font-weight:600;">② 한도 협상 타결</span><br>
+            TGA 재충전 → 국채 대규모 발행 → 시중 유동성 흡수 (역 QE 효과)
+          </div>
+          <div style="padding:8px 10px;background:var(--red-bg);border-radius:var(--radius);">
+            <span style="color:var(--red);font-weight:600;">③ 시장 영향</span><br>
+            단기물 T-bill 수익률 급등 + MMF 리스크 → 단기 신용 시장 혼란
+          </div>
+          <div style="padding:8px 10px;background:var(--green-bg);border-radius:var(--radius);">
+            <span style="color:var(--green);font-weight:600;">④ 정상화</span><br>
+            TGA 안정 + RRP 소진으로 흡수 → 은행 지준 감소 완화
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /tab-credit -->
+
+<!-- ══════════════════════════════════════
+     TAB : SKEW / 왜도 지수
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-skew" style="display:none;">
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar"></div>
+    <span class="section-hd-title">CBOE SKEW Index — 왜도 지수 & SPX 선행 분석</span>
+    <span class="section-hd-sub">— HF 풋 포지셔닝 완료 신호 · 시장 고점 1~3개월 선행</span>
+  </div>
+
+  <!-- 개념 카드 행 -->
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="card" style="border-top:3px solid var(--purple);">
+      <div class="card-title" style="color:var(--purple);">SKEW Index란?</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;">
+        CBOE가 산출하는 <strong>OTM(외가격) 풋옵션 수요 지수</strong>. 정규분포(100)에서 벗어나
+        왼쪽 꼬리(대폭락 확률)가 두꺼울수록 상승. 헤지펀드가 대규모 풋옵션으로
+        하락 헤지를 완료했을 때 고점에 도달하며, 이후 1~3개월 내 지수 조정이 출현하는
+        경향이 있다.
+      </p>
+      <div style="margin-top:10px;padding:8px 10px;background:var(--purple-bg);border-radius:var(--radius);font-size:11px;color:var(--purple);">
+        📐 기준: 100 = 정규분포 · 130+ = 테일리스크 주의 · 150+ = 극단적 풋 수요
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--navy);">
+      <div class="card-title">Collar 전략 → SKEW 상승 메커니즘</div>
+      <div style="font-size:12px;color:var(--text-body);line-height:1.8;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="background:var(--navy);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;">1</span>
+          <span>기관투자자 <strong>콜옵션 매도 + 풋옵션 매수</strong> (Collar)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="background:var(--navy);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;">2</span>
+          <span>OTM 풋 수요 급증 → <strong>Put Skew 상승</strong></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <span style="background:var(--purple);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;">3</span>
+          <span>SKEW 고점 = <strong>HF 풋 헤지 완료</strong> 신호</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;">4</span>
+          <span>옵션 만기 전환 시 SKEW 급락 → <strong>1~3개월 내 조정</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red);">
+      <div class="card-title" style="color:var(--red);">실제 사례 — 2024년 1월</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;margin-bottom:10px;">
+        2024년 1월 24일 SKEW 고점 형성 → 이후 SPX 하락 조정 출현.
+        SKEW는 동시에 하락하지 않고 <strong>옵션 월 전환 시점에 급락</strong>하므로
+        고점 → 만기 전환 → 가격 조정 순서 파악이 핵심.
+      </p>
+      <div style="background:var(--red-bg);border-radius:var(--radius);padding:8px 10px;font-size:11px;">
+        <span style="color:var(--red);font-weight:600;">⚠ 주의:</span>
+        <span style="color:var(--text-body);"> SKEW 단독으로 타이밍 잡기보다
+        VIX 수준·금리 방향과 함께 3각 확인 후 사용</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPX vs SKEW 차트 -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title">SPX vs CBOE SKEW — 왜도지수 선행 신호 (최근 24개월)</div>
+    <div style="height:280px;"><canvas id="skewSpxChart"></canvas></div>
+    <div style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--text-sub);">
+      <span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:#1a5fc8;border-radius:2px;"></span> SPX 지수 (좌)</span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:#6b46c1;border-radius:2px;"></span> SKEW Index (우)</span>
+      <span style="display:flex;align-items:center;gap:5px;"><span style="display:inline-block;width:14px;height:3px;background:rgba(192,57,43,0.5);border-radius:2px;border:1px dashed #c0392b;"></span> SKEW 고점 경보 (140+)</span>
+    </div>
+  </div>
+
+  <!-- SKEW 레벨 해석 + Negative Skewness -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">SKEW 레벨별 시장 해석</div>
+      <table class="data-table" style="margin-top:6px;">
+        <thead><tr><th>SKEW 수준</th><th>해석</th><th>전략적 대응</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-green">100~115</span></td><td>정상 범위 — 시장 낙관</td><td>중립·롱 유지 가능</td></tr>
+          <tr><td><span class="badge badge-yellow">115~130</span></td><td>풋 수요 증가 — 경계 구간</td><td>포지션 축소·헤지 검토</td></tr>
+          <tr><td><span class="badge badge-red">130~145</span></td><td>HF 헤지 본격화 — 주의</td><td>선제적 헤지 집행</td></tr>
+          <tr><td><span class="badge badge-red" style="background:#7b1c1c;color:#fff;">145+</span></td><td>극단적 풋 수요 — 경보</td><td>Net Short 검토·익스포저 최소화</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Negative Skewness — 시장 분포 분석 (2022)</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;margin-bottom:10px;">
+        2022년 베어마켓에서 SPX 수익률 분포의 <strong>음의 왜도(Negative Skewness)</strong>가
+        심화됐다. 평균 이상의 상승일보다 하락일 충격이 더 크고 빈번한 구조.
+      </p>
+      <div style="height:160px;"><canvas id="skewDistChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 프레임워크 요약 -->
+  <div class="card" style="background:linear-gradient(135deg,var(--purple-bg),var(--navy-light));">
+    <div class="card-title" style="color:var(--navy-dark);">SKEW 기반 매크로 모니터링 프레임워크</div>
+    <div class="grid-3" style="margin-top:10px;gap:12px;">
+      <div style="background:#fff;border-radius:var(--radius);padding:12px;">
+        <div style="font-size:10px;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">STEP 1 — 수집</div>
+        <div style="font-size:12px;color:var(--text-body);">매일 CBOE SKEW, VIX, SPX 레벨 기록. 전주 대비 SKEW 변화폭 (+5 이상이면 경보).</div>
+      </div>
+      <div style="background:#fff;border-radius:var(--radius);padding:12px;">
+        <div style="font-size:10px;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">STEP 2 — 신호</div>
+        <div style="font-size:12px;color:var(--text-body);">SKEW 130 돌파 + VIX 18 이하 조합 = "동상이몽" 최고 경보. 헤지 집행 타이밍.</div>
+      </div>
+      <div style="background:#fff;border-radius:var(--radius);padding:12px;">
+        <div style="font-size:10px;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">STEP 3 — 실행</div>
+        <div style="font-size:12px;color:var(--text-body);">SKEW 고점 후 옵션 만기 전환 확인. 만기 전환 시 SKEW 급락 → 1~3개월 내 조정 대비 숏 헤지 유지.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /tab-skew -->
+
+<!-- ══════════════════════════════════════
+     TAB : 0DTE / 감마 구조
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-0dte" style="display:none;">
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar" style="background:var(--orange);"></div>
+    <span class="section-hd-title">0DTE 옵션 & Delta Hedge / Gamma Squeeze</span>
+    <span class="section-hd-sub">— S&P500 옵션 거래량의 절반 차지 · 시장 구조 변화의 핵심</span>
+  </div>
+
+  <!-- 0DTE 소개 카드 행 -->
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="card" style="border-top:3px solid var(--orange);">
+      <div class="card-title" style="color:var(--orange);">1. 0DTE란 무엇인가</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;">
+        <strong>Zero Days to Expiration</strong> — 당일 만료되는 초단기 옵션.
+        2022년 이후 S&P500 일일 옵션 거래량의 <strong>약 50%</strong>를 차지하며
+        시장 구조를 근본적으로 변화시켰다. 낮은 프리미엄으로 극도의 레버리지
+        효과를 낼 수 있어 개인·기관 모두 폭발적으로 활용 중.
+      </p>
+      <div style="margin-top:8px;padding:8px 10px;background:var(--orange-bg);border-radius:var(--radius);font-size:11px;color:var(--orange);">
+        📊 2023년 기준: SPX 일일 옵션 중 0DTE 비중 ≈ 47~55%
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--accent);">
+      <div class="card-title">2. Low Cost / High Leverage</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;margin-bottom:8px;">
+        <strong>TSLA 사례 비교 (2023-02)</strong>
+      </p>
+      <div style="background:var(--bg);border-radius:var(--radius);padding:10px;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+          <span style="color:var(--text-sub);">주식 직접 매수</span>
+          <span style="font-weight:600;color:var(--text-dark);">$14,400,000</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border);">
+          <span style="color:var(--text-sub);">0DTE 콜옵션 (동일 델타)</span>
+          <span style="font-weight:600;color:var(--green);">$140,000</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:4px 0;">
+          <span style="color:var(--text-sub);">비용 절감</span>
+          <span style="font-weight:600;color:var(--accent);">99% ↓</span>
+        </div>
+      </div>
+      <p style="margin-top:8px;font-size:11px;color:var(--text-sub);">
+        동일한 방향성 노출을 <strong>1/100 비용</strong>으로 구현. 단, 당일 종가까지만 유효.
+      </p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red);">
+      <div class="card-title" style="color:var(--red);">3. 시장 구조 리스크</div>
+      <p style="font-size:12px;color:var(--text-body);line-height:1.7;">
+        0DTE 거래량 급증은 세 가지 구조적 리스크를 발생시킨다:
+      </p>
+      <ul style="font-size:12px;color:var(--text-body);line-height:1.8;padding-left:16px;margin-top:8px;">
+        <li><strong>쏠림(Herding)</strong> — 같은 방향 0DTE 집중 시 단기 변동성 폭발</li>
+        <li><strong>감마 증폭</strong> — 딜러 델타 헤지가 가격 움직임을 추가 증폭</li>
+        <li><strong>만기 핀닝</strong> — 대형 OI 행사가 주변에서 지수가 "고정"되는 현상</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 0DTE 비중 차트 + 감마 메커니즘 -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">0DTE 옵션 거래량 비중 추이 (SPX)</div>
+      <div style="height:220px;"><canvas id="odteVolumeChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Delta Hedge / Gamma Squeeze 메커니즘</div>
+      <div style="font-size:12px;color:var(--text-body);">
+        <!-- 플로우차트 스타일 -->
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="flex:1;background:var(--accent-lt);border:1px solid var(--accent);border-radius:var(--radius);padding:8px 10px;text-align:center;">
+              <div style="font-size:10px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:1px;">시작</div>
+              <div>투자자 0DTE <strong>콜옵션 대규모 매수</strong></div>
+            </div>
+            <span style="font-size:18px;color:var(--text-muted);">→</span>
+            <div style="flex:1;background:var(--yellow-bg);border:1px solid var(--yellow);border-radius:var(--radius);padding:8px 10px;text-align:center;">
+              <div style="font-size:10px;color:var(--yellow);font-weight:600;text-transform:uppercase;letter-spacing:1px;">딜러 반응</div>
+              <div>딜러 <strong>델타 헤지</strong> 위해 주식 매수</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="flex:1;background:var(--orange-bg);border:1px solid var(--orange);border-radius:var(--radius);padding:8px 10px;text-align:center;">
+              <div style="font-size:10px;color:var(--orange);font-weight:600;text-transform:uppercase;letter-spacing:1px;">증폭</div>
+              <div>주가 상승 → 델타 증가 → 딜러 <strong>추가 매수</strong></div>
+            </div>
+            <span style="font-size:18px;color:var(--text-muted);">→</span>
+            <div style="flex:1;background:var(--red-bg);border:1px solid var(--red);border-radius:var(--radius);padding:8px 10px;text-align:center;">
+              <div style="font-size:10px;color:var(--red);font-weight:600;text-transform:uppercase;letter-spacing:1px;">결과</div>
+              <div><strong>감마 스퀴즈</strong> — 단기 급등 후 만기 시 급반전</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px;padding:8px 10px;background:var(--bg);border-radius:var(--radius);font-size:11px;color:var(--text-sub);">
+          반대 방향(풋 매수)에서도 동일 메커니즘 → 하락 가속. 만기 직전 VIX 급등 패턴의 원인.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0DTE 모니터링 체크리스트 + GEX -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Gamma Exposure (GEX) 레벨 해석</div>
+      <table class="data-table" style="margin-top:6px;">
+        <thead><tr><th>GEX 상태</th><th>딜러 포지션</th><th>시장 영향</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-green">Positive GEX</span></td>
+            <td>Long Gamma</td>
+            <td>딜러가 변동성 완화 — 범위 제한적 움직임</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-red">Negative GEX</span></td>
+            <td>Short Gamma</td>
+            <td>딜러가 추세 추종 → <strong>변동성 폭발</strong> 위험</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-yellow">GEX 전환점</span></td>
+            <td>Neutral</td>
+            <td>방향 전환 가능성 — SKEW·VIX와 함께 확인</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;padding:8px 10px;background:var(--red-bg);border-radius:var(--radius);font-size:11px;">
+        <span style="color:var(--red);font-weight:600;">핵심:</span>
+        <span style="color:var(--text-body);"> GEX 마이너스 전환 + SKEW 고점 + VIX 저점 = 3중 경보 → 포지션 축소 필수</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">0DTE 리스크 모니터링 체크리스트</div>
+      <ul class="checklist" style="margin-top:6px;">
+        <li>
+          <div class="ci ci-warn">△</div>
+          <div><span class="cl-title">0DTE 콜/풋 비율 (PCR) 확인</span>
+          <span class="cl-desc">PCR &lt; 0.7 = 과도한 콜 쏠림 → Gamma Squeeze 후 급락 경고</span></div>
+        </li>
+        <li>
+          <div class="ci ci-bad">✗</div>
+          <div><span class="cl-title">만기일 근처 대형 OI 행사가 확인</span>
+          <span class="cl-desc">최대 OI 행사가 = 핀닝 타겟. 장 마감 전 해당 수준 이탈 시 변동성 폭발</span></div>
+        </li>
+        <li>
+          <div class="ci ci-info">▷</div>
+          <div><span class="cl-title">월·분기 만기일(Magic 8) 특별 경계</span>
+          <span class="cl-desc">분기 만기(3·6·9·12월 세 번째 금요일) = 0DTE·주간·월간 만기 동시 → 이중 감마 위험</span></div>
+        </li>
+        <li>
+          <div class="ci ci-warn">△</div>
+          <div><span class="cl-title">GEX 마이너스 전환 여부</span>
+          <span class="cl-desc">SpotGamma·SqueezeMetrics 등으로 확인. 마이너스 = 딜러 추세 추종 구조</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 통합 전략 요약 -->
+  <div class="card" style="background:linear-gradient(135deg,var(--orange-bg),var(--yellow-bg));">
+    <div class="card-title" style="color:var(--navy-dark);">0DTE + SKEW 통합 전략 프레임워크</div>
+    <div style="margin-top:12px;overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>시장 상황</th>
+            <th>SKEW</th>
+            <th>GEX</th>
+            <th>0DTE PCR</th>
+            <th>전략 시그널</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>위험 최고조</td>
+            <td><span class="badge badge-red">140+</span></td>
+            <td><span class="badge badge-red">Negative</span></td>
+            <td><span class="badge badge-red">&lt;0.7</span></td>
+            <td style="color:var(--red);font-weight:600;">즉시 헤지 · 익스포저 최소화</td>
+          </tr>
+          <tr>
+            <td>주의 구간</td>
+            <td><span class="badge badge-yellow">125~140</span></td>
+            <td><span class="badge badge-yellow">전환 중</span></td>
+            <td><span class="badge badge-yellow">0.7~1.0</span></td>
+            <td style="color:var(--yellow);font-weight:600;">풋 스프레드 헤지 검토</td>
+          </tr>
+          <tr>
+            <td>안정 구간</td>
+            <td><span class="badge badge-green">&lt;120</span></td>
+            <td><span class="badge badge-green">Positive</span></td>
+            <td><span class="badge badge-green">1.0+</span></td>
+            <td style="color:var(--green);font-weight:600;">롱 유지 · 0DTE 콜 활용 가능</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div><!-- /tab-0dte -->
+
+<div class="tab-panel" id="tab-strategy" style="display:none;">
+<!-- ══════════════════════════════════════
+     SECTION 7 : 실전 체크리스트 + 전략
+══════════════════════════════════════ -->
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar"></div>
+    <span class="section-hd-title">실전 매크로 체크리스트 & 시나리오 전략</span>
+    <span class="section-hd-sub">— 매일 아침 이것만 확인하면 시장 방향이 보인다</span>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:16px;">
+    <div class="card">
+      <div class="card-title">A. 유동성 · 연준 신호</div>
+      <ul class="checklist">
+        <li>
+          <div class="ci ci-bad">✗</div>
+          <div><span class="cl-title">QT 진행 중 — 연준 자산 감소 확인</span>
+          <span class="cl-desc">매주 수요일 H.4.1 발표. 자산 감소 = 유동성 축소 = 자산가격 역풍</span></div>
+        </li>
+        <li>
+          <div class="ci ci-warn">△</div>
+          <div><span class="cl-title">TGA 잔고 급변동 여부 (부채한도 이슈)</span>
+          <span class="cl-desc">TGA 감소 구간 = 숨은 QE 효과 → 단기 유동성 개선 가능</span></div>
+        </li>
+        <li>
+          <div class="ci ci-bad">✗</div>
+          <div><span class="cl-title">RRP(역레포) 잔고 소진 속도</span>
+          <span class="cl-desc">급격한 소진 = 완충재 고갈 → 실질 유동성 충격 시기 근접</span></div>
+        </li>
+        <li>
+          <div class="ci ci-info">▷</div>
+          <div><span class="cl-title">파월 발언 논조 변화</span>
+          <span class="cl-desc">"more work to do" vs "충분히 제약적" — 피봇 신호 탐지</span></div>
+        </li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">B. 변동성 · 신용 신호</div>
+      <ul class="checklist">
+        <li>
+          <div class="ci ci-warn">△</div>
+          <div><span class="cl-title">MOVE Index — 채권 변동성 선행 지표</span>
+          <span class="cl-desc">MOVE 상승 + VIX 하락 = 동상이몽 → 주가 상승 신뢰도 낮음</span></div>
+        </li>
+        <li>
+          <div class="ci ci-bad">✗</div>
+          <div><span class="cl-title">HYG HV 10 법칙</span>
+          <span class="cl-desc">HV ≥ 10 지속 = 하이일드 스프레드 확대 = 증시 압박 임박</span></div>
+        </li>
+        <li>
+          <div class="ci ci-bad">✗</div>
+          <div><span class="cl-title">10-2Y 금리 스프레드 역전 지속</span>
+          <span class="cl-desc">역전 해소 시(가팔라질 때) 오히려 침체 진입 신호일 수 있음</span></div>
+        </li>
+        <li>
+          <div class="ci ci-info">▷</div>
+          <div><span class="cl-title">BEI(기대인플레) vs 실제 CPI 갭</span>
+          <span class="cl-desc">BEI &gt; CPI = 물가 추가 상승 기대 → 연준 추가 긴축 압박</span></div>
+        </li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">C. 달러 · 글로벌 신호</div>
+      <ul class="checklist">
+        <li>
+          <div class="ci ci-bad">✗</div>
+          <div><span class="cl-title">달러인덱스(DXY) 방향</span>
+          <span class="cl-desc">DXY 강세 = 신흥국 자금 유출. 100 이상 = 리스크오프 환경</span></div>
+        </li>
+        <li>
+          <div class="ci ci-warn">△</div>
+          <div><span class="cl-title">엔화(JPY) 움직임 — 캐리 청산 경계</span>
+          <span class="cl-desc">엔 급강세 반전 = 캐리트레이드 청산 → 글로벌 시장 충격</span></div>
+        </li>
+        <li>
+          <div class="ci ci-warn">△</div>
+          <div><span class="cl-title">중국 LPR/MLF 결정 (매월 20일 전후)</span>
+          <span class="cl-desc">인하 = 항셍·A주·원자재 강세 촉매. KOSPI 수혜 여부 판단</span></div>
+        </li>
+        <li>
+          <div class="ci ci-ok">✓</div>
+          <div><span class="cl-title">원유 선물 구조 (콘탱고 vs 백워데이션)</span>
+          <span class="cl-desc">백워데이션 유지 = 수급 타이트 = 유가 추가 상승 가능</span></div>
+        </li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">D. 주식시장 판단 기준</div>
+      <ul class="checklist">
+        <li>
+          <div class="ci ci-bad">✗</div>
+          <div><span class="cl-title">테크 단독 랠리 ≠ 시장 건강 신호</span>
+          <span class="cl-desc">테크 스퀴즈 + S&P 인플로우 미동반 = 동상이몽 → 위험</span></div>
+        </li>
+        <li>
+          <div class="ci ci-warn">△</div>
+          <div><span class="cl-title">시클리컬 vs 성장주 상대강도</span>
+          <span class="cl-desc">스프레드 역전/축소 → 성장주 방어 강세(경기침체 베팅)</span></div>
+        </li>
+        <li>
+          <div class="ci ci-bad">✗</div>
+          <div><span class="cl-title">러셀2000 방향 (경기 바로미터)</span>
+          <span class="cl-desc">러셀 하락 = 경기침체 우려 선반영. S&P와 디커플링 시 경고</span></div>
+        </li>
+        <li>
+          <div class="ci ci-warn">△</div>
+          <div><span class="cl-title">어닝 시즌 — 캐시플로우 없는 좀비 테크 경계</span>
+          <span class="cl-desc">금리 상승기 할인율 충격 → 좀비 성장주 치명타. 퀄리티 팩터 집중</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 시나리오 매트릭스 -->
+  <div class="card">
+    <div class="card-title">매크로 시나리오 매트릭스 — 연준 경로별 자산배분 전략</div>
+    <table class="ds-table">
+      <thead>
+        <tr>
+          <th>시나리오</th>
+          <th>금리</th>
+          <th>달러</th>
+          <th>유동성</th>
+          <th>주식</th>
+          <th>채권</th>
+          <th>원자재</th>
+          <th>신흥국</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-red">① 긴축 강화</span><br><span style="font-size:10px;color:var(--text-sub);">꼬리 리스크</span></td>
+          <td class="sig-down">단기↑↑<br>장기↑</td>
+          <td class="sig-down">강세</td>
+          <td class="sig-down">급축소</td>
+          <td class="sig-down">테크·시클리컬 약세</td>
+          <td class="sig-down">단기채만 유효</td>
+          <td class="sig-up">원유 강세</td>
+          <td class="sig-down">자금유출 압박</td>
+        </tr>
+        <tr style="background:var(--yellow-bg);">
+          <td><span class="badge badge-yellow">② 동결 유지</span><br><span style="font-size:10px;color:var(--text-sub);">현재 베이스케이스</span></td>
+          <td class="sig-neutral">단기 고정<br>장기 변동</td>
+          <td class="sig-neutral">보합</td>
+          <td class="sig-neutral">소폭 축소</td>
+          <td class="sig-neutral">선별적 강세<br>퀄리티 팩터</td>
+          <td class="sig-neutral">중립</td>
+          <td class="sig-neutral">원유 보합</td>
+          <td class="sig-neutral">중립</td>
+        </tr>
+        <tr style="background:var(--green-bg);">
+          <td><span class="badge badge-green">③ 피봇 (인하)</span><br><span style="font-size:10px;color:var(--text-sub);">기대 시나리오</span></td>
+          <td class="sig-up">단기↓↓<br>장기↑(초기)</td>
+          <td class="sig-up">약세</td>
+          <td class="sig-up">확대</td>
+          <td class="sig-up">나스닥 강세<br>성장주 회복</td>
+          <td class="sig-up">장기채 강세<br>듀레이션↑</td>
+          <td class="sig-up">금·원자재 ↑</td>
+          <td class="sig-up">자금유입 ↑</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-orange">④ 스태그플레이션</span><br><span style="font-size:10px;color:var(--text-sub);">최악 꼬리</span></td>
+          <td class="sig-down">단기↑<br>장기 보합</td>
+          <td class="sig-down">강세</td>
+          <td class="sig-down">급축소</td>
+          <td class="sig-down">전 섹터 약세</td>
+          <td class="sig-down">전 채권 약세</td>
+          <td class="sig-up">원자재 최강<br>유일한 피난처</td>
+          <td class="sig-down">최악</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 현재 종합 판단 -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;">
+      <div style="background:var(--red-bg);border:1px solid #f5c0bb;border-radius:var(--radius);padding:12px;text-align:center;">
+        <div style="font-size:10px;font-weight:600;color:var(--text-sub);margin-bottom:6px;">채권 시그널</div>
+        <span class="badge badge-red">RISK OFF</span>
+        <div id="live-sig-bond" style="font-size:10.5px;color:var(--text-sub);margin-top:6px;">10-2Y 역전 지속<br>단기금리 최고 수준</div>
+      </div>
+      <div style="background:var(--orange-bg);border:1px solid #f5c090;border-radius:var(--radius);padding:12px;text-align:center;">
+        <div style="font-size:10px;font-weight:600;color:var(--text-sub);margin-bottom:6px;">유동성 시그널</div>
+        <span class="badge badge-orange">CAUTION</span>
+        <div id="live-sig-liq" style="font-size:10.5px;color:var(--text-sub);margin-top:6px;">QT 진행 + RRP<br>소진 경계</div>
+      </div>
+      <div style="background:var(--yellow-bg);border:1px solid #f0d080;border-radius:var(--radius);padding:12px;text-align:center;">
+        <div style="font-size:10px;font-weight:600;color:var(--text-sub);margin-bottom:6px;">변동성 시그널</div>
+        <span class="badge badge-yellow">MIXED</span>
+        <div id="live-sig-vol" style="font-size:10.5px;color:var(--text-sub);margin-top:6px;">MOVE — &nbsp; VIX —<br>동상이몽 경계</div>
+      </div>
+      <div style="background:var(--green-bg);border:1px solid #90d4b8;border-radius:var(--radius);padding:12px;text-align:center;">
+        <div style="font-size:10px;font-weight:600;color:var(--text-sub);margin-bottom:6px;">중국 시그널</div>
+        <span class="badge badge-green">POSITIVE</span>
+        <div style="font-size:10.5px;color:var(--text-sub);margin-top:6px;">부양책 기대<br>KOSPI 수혜 가능</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /tab-strategy -->
+
+<!-- FOOTER -->
+<div style="text-align:center;padding:28px 0;color:var(--text-muted);font-size:11px;border-top:1px solid var(--border);margin-top:12px;">
+  DS Asset Management — Macro Intelligence Dashboard &nbsp;|&nbsp;
+  채널 분석 기반 재구성 &nbsp;|&nbsp;
+  본 자료는 내부 투자 참고용으로 투자 결정의 책임은 본인에게 있습니다.
+</div>
+
+</div><!-- /container -->
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+// ── 탭 전환 ──
+document.querySelectorAll('.subnav-tab').forEach(function(tab) {
+  tab.addEventListener('click', function(e) {
+    e.preventDefault();
+    var targetId = this.getAttribute('data-tab');
+    if (!targetId) return;
+
+    // 탭 버튼 active 처리
+    document.querySelectorAll('.subnav-tab').forEach(function(t) {
+      t.classList.remove('active');
+    });
+    this.classList.add('active');
+
+    // 패널 표시/숨김
+    document.querySelectorAll('.tab-panel').forEach(function(panel) {
+      panel.style.display = 'none';
+    });
+    var target = document.getElementById(targetId);
+    if (target) target.style.display = 'block';
+  });
+});
+
+// 시계
+function updateClock() {
+  document.getElementById('clock').textContent =
+    new Date().toLocaleString('ko-KR', {timeZone:'Asia/Seoul', hour12:false});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Chart 기본값 — 화이트 테마
+Chart.defaults.color = '#7a8699';
+Chart.defaults.borderColor = '#e2e8f0';
+Chart.defaults.font.family = "'Inter', 'Noto Sans KR', sans-serif";
+Chart.defaults.font.size = 11;
+
+// 차트 인스턴스 저장소 (실데이터 업데이트용)
+window._charts = {};
+function _C(id, cfg) {
+  if (window._charts[id]) {
+    try { window._charts[id].destroy(); } catch(e) {}
+  }
+  window._charts[id] = new Chart(id, cfg);
+  return window._charts[id];
+}
+
+const LABELS_QT = ['2008','2010','2013','2015','2018 QT','2019','2020','2021','2022 QT','2023','2024'];
+const LABELS_12M = ['22.01','22.04','22.07','22.10','23.01','23.04','23.07','23.10','24.01','24.04','24.07','현재'];
+
+// ── 연준 대차대조표
+_C('fedBalChart', {
+  type: 'line',
+  data: {
+    labels: LABELS_QT,
+    datasets: [{
+      label: '연준 총자산 ($조)',
+      data: [0.9, 2.3, 3.5, 4.5, 4.0, 3.8, 7.1, 8.5, 8.97, 7.8, 7.3],
+      borderColor: '#1a5fc8', backgroundColor: 'rgba(26,95,200,0.08)',
+      fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#1a5fc8',
+    }]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false} },
+    scales:{ x:{grid:{color:'#f0f0f0'}}, y:{grid:{color:'#f0f0f0'}, ticks:{callback:v=>'$'+v+'조'}} }
+  }
+});
+
+// ── RRP
+_C('rrpChart', {
+  type: 'line',
+  data: {
+    labels: ['20Q1','20Q3','21Q1','21Q3','22Q1','22Q3','23Q1','23Q3','23Q4','24Q1','24Q3','현재'],
+    datasets: [{
+      label: 'RRP 잔고',
+      data: [0.0, 0.1, 0.3, 1.0, 1.6, 2.2, 2.5, 1.0, 0.7, 0.5, 0.4, 0.4],
+      borderColor: '#6b46c1', backgroundColor: 'rgba(107,70,193,0.08)',
+      fill: true, tension: 0.4, pointRadius: 3, pointBackgroundColor: '#6b46c1',
+    }]
+  },
+  options: { responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{display:false} },
+    scales:{ x:{grid:{color:'#f0f0f0'}}, y:{grid:{color:'#f0f0f0'}, ticks:{callback:v=>'$'+v+'조'}} }
+  }
+});
+
+// ── 10-2Y 스프레드
+_C('spreadChart', {
+  type: 'bar',
+  data: {
+    labels: LABELS_12M,
+    datasets:[{
+      label:'10-2Y (bp)',
+      data:[70,20,-30,-50,-70,-90,-100,-70,-50,-40,-15,-43],
+      backgroundColor: ctx => ctx.raw >= 0 ? 'rgba(10,135,90,0.6)' : 'rgba(192,57,43,0.6)',
+      borderColor:     ctx => ctx.raw >= 0 ? '#0a875a' : '#c0392b',
+      borderWidth:1,
+    }]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ x:{grid:{color:'#f0f0f0'}}, y:{grid:{color:'#f0f0f0'}, ticks:{callback:v=>v+'bp'}} }
+  }
+});
+
+// ── 기준금리
+_C('ffChart', {
+  type:'line',
+  data:{
+    labels:['22.01','22.03','22.05','22.07','22.09','22.11','23.02','23.07','23.09','현재'],
+    datasets:[{
+      label:'FF Rate',
+      data:[0.08,0.33,0.83,2.33,3.08,3.83,4.58,5.08,5.33,5.33],
+      borderColor:'#c0392b', backgroundColor:'rgba(192,57,43,0.06)',
+      fill:true, tension:0.3, pointRadius:2,
+    }]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{ x:{grid:{color:'#f0f0f0'}}, y:{grid:{color:'#f0f0f0'}, ticks:{callback:v=>v+'%'}} }
+  }
+});
+
+// ── VIX vs MOVE (메인 차트)
+_C('vixMoveChart', {
+  type:'line',
+  data:{
+    labels:LABELS_12M,
+    datasets:[
+      { label:'VIX (주식 변동성)',
+        data:[23,33,28,30,21,17,15,18,14,16,18,18.5],
+        borderColor:'#1a5fc8', backgroundColor:'rgba(26,95,200,0.06)',
+        fill:true, tension:0.4, pointRadius:3, yAxisID:'y' },
+      { label:'MOVE Index (채권 변동성)',
+        data:[100,155,140,160,130,120,100,110,85,90,100,115],
+        borderColor:'#c0392b', backgroundColor:'transparent',
+        borderDash:[5,3], tension:0.4, pointRadius:3, yAxisID:'y2' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index'},
+    plugins:{ legend:{labels:{boxWidth:10,padding:12}} },
+    scales:{
+      x:{grid:{color:'#f0f0f0'}},
+      y:{ grid:{color:'#f0f0f0'}, min:0, max:50, ticks:{color:'#1a5fc8'},
+          title:{display:true,text:'VIX',color:'#1a5fc8'} },
+      y2:{ position:'right', grid:{display:false}, min:50, max:200,
+           ticks:{color:'#c0392b'},
+           title:{display:true,text:'MOVE',color:'#c0392b'} }
+    }
+  }
+});
+
+// ── HYG & HV
+_C('hygChart', {
+  type:'line',
+  data:{
+    labels:LABELS_12M,
+    datasets:[
+      { label:'HYG 가격($)',
+        data:[80,76,74,75,77,79,80,77,78,82,80,79],
+        borderColor:'#1a5fc8', backgroundColor:'rgba(26,95,200,0.06)',
+        fill:true, tension:0.4, pointRadius:2, yAxisID:'y' },
+      { label:'HV (Historic Volatility)',
+        data:[8,16,14,15,12,10,9,11,8,7,9,12.3],
+        borderColor:'#c05621', backgroundColor:'transparent',
+        borderDash:[5,3], tension:0.4, pointRadius:2, yAxisID:'y2' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index'},
+    plugins:{ legend:{labels:{boxWidth:10,padding:12}},
+      annotation:{}
+    },
+    scales:{
+      x:{grid:{color:'#f0f0f0'}},
+      y:{ grid:{color:'#f0f0f0'}, min:68, max:90,
+          ticks:{callback:v=>'$'+v, color:'#1a5fc8'},
+          title:{display:true,text:'HYG 가격',color:'#1a5fc8'} },
+      y2:{ position:'right', grid:{display:false}, min:0, max:25,
+           ticks:{callback:v=>v, color:'#c05621'},
+           title:{display:true,text:'HV (10 경계선)',color:'#c05621'} }
+    }
+  }
+});
+
+// ── CPI
+_C('inflChart', {
+  type:'line',
+  data:{
+    labels:['21.06','21.12','22.03','22.06','22.09','22.12','23.03','23.06','23.09','23.12','24.03','현재'],
+    datasets:[
+      { label:'CPI YoY(%)',
+        data:[5.4,7.0,7.9,9.1,8.2,6.5,5.0,3.0,3.7,3.4,3.5,3.5],
+        borderColor:'#c0392b', tension:0.4, pointRadius:2 },
+      { label:'BEI 10Y(%)',
+        data:[2.4,2.7,2.9,2.6,2.4,2.2,2.3,2.2,2.3,2.2,2.4,2.38],
+        borderColor:'#b5770d', borderDash:[5,3], tension:0.4, pointRadius:2 }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{labels:{boxWidth:10,padding:10}}},
+    scales:{ x:{grid:{color:'#f0f0f0'}}, y:{grid:{color:'#f0f0f0'}, ticks:{callback:v=>v+'%'}} }
+  }
+});
+
+// ── DXY
+_C('dxyChart', {
+  type:'line',
+  data:{
+    labels:['21.01','21.06','21.12','22.03','22.06','22.09','22.12','23.03','23.06','23.09','23.12','현재'],
+    datasets:[
+      { label:'DXY',
+        data:[90,92,96,99,104,113,104,102,103,106,101,104.5],
+        borderColor:'#1a3a6b', backgroundColor:'rgba(26,58,107,0.06)',
+        fill:true, tension:0.4, pointRadius:2, yAxisID:'y' },
+      { label:'WTI($, 오른쪽)',
+        data:[53,71,73,110,115,85,75,72,70,90,72,85],
+        borderColor:'#c05621', borderDash:[5,3], tension:0.4, pointRadius:2, yAxisID:'y2' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index'},
+    plugins:{legend:{labels:{boxWidth:10,padding:10}},
+      tooltip:{callbacks:{label:c=>c.datasetIndex===1?`WTI: $${c.raw}`:`DXY: ${c.raw}`}}},
+    scales:{
+      x:{grid:{color:'#f0f0f0'}},
+      y:{ grid:{color:'#f0f0f0'}, min:85, max:120, ticks:{color:'#1a3a6b'},
+          title:{display:true,text:'DXY',color:'#1a3a6b'} },
+      y2:{ position:'right', grid:{display:false}, min:50, max:130,
+           ticks:{callback:v=>'$'+v, color:'#c05621'},
+           title:{display:true,text:'WTI',color:'#c05621'} }
+    }
+  }
+});
+
+// ── PMI vs EPS 성장률
+_C('pmiEpsChart', {
+  type:'line',
+  data:{
+    labels:['22.01','22.04','22.07','22.10','23.01','23.04','23.07','23.10','24.01','24.04','24.07','현재'],
+    datasets:[
+      { label:'ISM 제조업 PMI',
+        data:[57.6,55.4,52.8,50.2,47.4,47.1,46.4,46.7,49.1,49.2,48.5,48.7],
+        borderColor:'#0a875a', backgroundColor:'rgba(10,135,90,0.06)',
+        fill:true, tension:0.4, pointRadius:3, yAxisID:'y' },
+      { label:'S&P500 EPS 성장률(%)',
+        data:[9.2,11.1,7.3,1.5,-5.2,-6.1,-4.3,-1.1,4.8,7.2,9.1,10.3],
+        borderColor:'#1a5fc8', borderDash:[5,3],
+        tension:0.4, pointRadius:3, yAxisID:'y2' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index'},
+    plugins:{legend:{labels:{boxWidth:10,padding:10}},
+      tooltip:{callbacks:{label:c=>c.datasetIndex===0?`PMI: ${c.raw}`:`EPS: ${c.raw}%`}}},
+    scales:{
+      x:{grid:{color:'#f0f0f0'}},
+      y:{ grid:{color:'#f0f0f0'}, min:44, max:62,
+          ticks:{color:'#0a875a'}, title:{display:true,text:'PMI',color:'#0a875a'} },
+      y2:{ position:'right', grid:{display:false}, min:-10, max:15,
+           ticks:{callback:v=>v+'%',color:'#1a5fc8'},
+           title:{display:true,text:'EPS 성장률',color:'#1a5fc8'} }
+    }
+  }
+});
+
+// ── 신규 실업수당 청구
+_C('joblessChart', {
+  type:'line',
+  data:{
+    labels:['19.01','19.06','19.12','20.03','20.06','20.12','21.06','21.12','22.06','22.12','23.06','23.12','24.06','현재'],
+    datasets:[
+      { label:'신규 청구(천명)',
+        data:[216,213,218,6606,1508,840,405,206,221,224,260,218,235,218],
+        borderColor:'#1a3a6b', backgroundColor:'rgba(26,58,107,0.07)',
+        fill:true, tension:0.3, pointRadius:2 }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      annotation:{
+        annotations:{
+          line300:{type:'line',yMin:300,yMax:300,borderColor:'rgba(192,57,43,0.7)',borderWidth:2,borderDash:[6,3],
+            label:{content:'침체 경보 300K',display:true,position:'start',color:'#c0392b',font:{size:10}}}
+        }
+      }
+    },
+    scales:{
+      x:{grid:{color:'#f0f0f0'}},
+      y:{ grid:{color:'#f0f0f0'}, ticks:{callback:v=>v+'K',color:'#1a3a6b'},
+          title:{display:true,text:'신규 실업청구(천)',color:'#1a3a6b'} }
+    }
+  }
+});
+
+// ── USD/JPY vs 미-일 금리차
+_C('yccCarryChart', {
+  type:'line',
+  data:{
+    labels:['22.01','22.03','22.06','22.09','22.12','23.03','23.06','23.09','23.12','24.03','24.06','현재'],
+    datasets:[
+      { label:'USD/JPY',
+        data:[115.2,122.0,135.0,145.9,131.1,130.3,143.8,149.2,141.0,151.4,160.5,151.2],
+        borderColor:'#c05621', tension:0.4, pointRadius:3, yAxisID:'y' },
+      { label:'미-일 10Y 금리차(bp)',
+        data:[154,198,278,331,321,325,395,388,370,385,420,330],
+        borderColor:'#1a3a6b', borderDash:[5,3],
+        tension:0.4, pointRadius:3, yAxisID:'y2' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index'},
+    plugins:{legend:{labels:{boxWidth:10,padding:10}}},
+    scales:{
+      x:{grid:{color:'#f0f0f0'}},
+      y:{ grid:{color:'#f0f0f0'}, min:110, max:165,
+          ticks:{color:'#c05621'}, title:{display:true,text:'USD/JPY',color:'#c05621'} },
+      y2:{ position:'right', grid:{display:false}, min:100, max:450,
+           ticks:{callback:v=>v+'bp',color:'#1a3a6b'},
+           title:{display:true,text:'미-일 금리차',color:'#1a3a6b'} }
+    }
+  }
+});
+
+// ── BOJ YCC 밴드 조정 이력
+_C('yccBandChart', {
+  type:'bar',
+  data:{
+    labels:['2016.09\n도입','2018.07\n밴드±0.2','2021.03\n±0.25','2022.12\n±0.5','2023.07\n±1.0(유연)','2024.03\n마이너스해제'],
+    datasets:[
+      { label:'YCC 상한(%)',
+        data:[0.0, 0.2, 0.25, 0.5, 1.0, 1.0],
+        backgroundColor:['#e8eef8','#d0ddf8','#b5c8f5','#7a9fe0','#4470c4','#1a5fc8'],
+        borderColor:'#1a3a6b', borderWidth:1, borderRadius:4 }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>`YCC 상한: ${c.raw}%`}}},
+    scales:{
+      x:{grid:{display:false}, ticks:{font:{size:10}}},
+      y:{ grid:{color:'#f0f0f0'}, min:-0.1, max:1.3,
+          ticks:{callback:v=>v+'%',color:'#1a3a6b'},
+          title:{display:true,text:'YCC 상한',color:'#1a3a6b'} }
+    }
+  }
+});
+
+// ── IG / HY 크레딧 스프레드
+_C('creditSpreadChart', {
+  type:'line',
+  data:{
+    labels:['22.01','22.03','22.06','22.09','22.12','23.03','23.06','23.09','23.12','24.03','24.06','현재'],
+    datasets:[
+      { label:'IG OAS(bp)',
+        data:[92,120,158,154,138,130,122,135,100,98,105,115],
+        borderColor:'#1a5fc8', backgroundColor:'rgba(26,95,200,0.06)',
+        fill:true, tension:0.4, pointRadius:3, yAxisID:'y' },
+      { label:'HY OAS(bp)',
+        data:[310,440,580,545,480,470,400,445,340,320,350,380],
+        borderColor:'#c0392b', borderDash:[4,2],
+        tension:0.4, pointRadius:3, yAxisID:'y2' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index'},
+    plugins:{legend:{labels:{boxWidth:10,padding:10}}},
+    scales:{
+      x:{grid:{color:'#f0f0f0'}},
+      y:{ grid:{color:'#f0f0f0'}, min:80, max:200,
+          ticks:{callback:v=>v+'bp',color:'#1a5fc8'},
+          title:{display:true,text:'IG OAS',color:'#1a5fc8'} },
+      y2:{ position:'right', grid:{display:false}, min:250, max:700,
+           ticks:{callback:v=>v+'bp',color:'#c0392b'},
+           title:{display:true,text:'HY OAS',color:'#c0392b'} }
+    }
+  }
+});
+
+// ── SPX vs SKEW
+_C('skewSpxChart', {
+  type:'line',
+  data:{
+    labels:['22.01','22.03','22.06','22.09','22.12','23.03','23.06','23.09','23.12','24.01','24.03','24.06'],
+    datasets:[
+      { label:'SPX (좌)',
+        data:[4515,4374,3785,3640,3840,4050,4450,4300,4770,4890,5100,5460],
+        borderColor:'#1a5fc8', backgroundColor:'rgba(26,95,200,0.06)',
+        fill:true, tension:0.4, pointRadius:3, yAxisID:'y' },
+      { label:'SKEW Index (우)',
+        data:[130,128,118,120,125,132,128,135,138,144,136,130],
+        borderColor:'#6b46c1', borderDash:[4,2],
+        tension:0.4, pointRadius:4, yAxisID:'y2' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index'},
+    plugins:{
+      legend:{labels:{boxWidth:10,padding:12}},
+      annotation:{},
+      tooltip:{callbacks:{
+        label: c => c.datasetIndex===0 ? `SPX: ${c.raw.toLocaleString()}` : `SKEW: ${c.raw}`
+      }}
+    },
+    scales:{
+      x:{grid:{color:'#f0f0f0'}},
+      y:{ grid:{color:'#f0f0f0'}, min:3400, max:5800,
+          ticks:{callback:v=>v.toLocaleString(),color:'#1a5fc8'},
+          title:{display:true,text:'SPX',color:'#1a5fc8'} },
+      y2:{ position:'right', grid:{display:false}, min:100, max:160,
+           ticks:{color:'#6b46c1'},
+           title:{display:true,text:'SKEW',color:'#6b46c1'} }
+    }
+  }
+});
+
+// ── SKEW 수익률 분포 (Negative Skewness 시각화)
+_C('skewDistChart', {
+  type:'bar',
+  data:{
+    labels:['-5%','-4%','-3%','-2%','-1%','0%','+1%','+2%','+3%','+4%','+5%'],
+    datasets:[
+      { label:'SPX 일수익률 분포 (2022)',
+        data:[12,18,24,32,28,20,16,12,8,5,3],
+        backgroundColor: ctx => {
+          const v = ctx.dataIndex;
+          return v < 5 ? 'rgba(192,57,43,0.7)' : v === 5 ? 'rgba(180,180,180,0.5)' : 'rgba(26,95,200,0.55)';
+        },
+        borderRadius:3
+      }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:c=>`${c.raw}일`}}
+    },
+    scales:{
+      x:{grid:{display:false}},
+      y:{ grid:{color:'#f0f0f0'}, ticks:{color:'#7a8699'},
+          title:{display:true,text:'발생 일수',color:'#7a8699'} }
+    }
+  }
+});
+
+// ── 0DTE 거래량 비중
+_C('odteVolumeChart', {
+  type:'bar',
+  data:{
+    labels:['2021','2022 Q1','2022 Q3','2023 Q1','2023 Q3','2024 Q1','2024 현재'],
+    datasets:[
+      { label:'0DTE 비중(%)',
+        data:[22,31,38,45,50,52,55],
+        backgroundColor:'rgba(192,86,33,0.75)',
+        borderColor:'#c05621', borderWidth:1, borderRadius:4,
+        yAxisID:'y'
+      },
+      { label:'SPX 일평균 옵션 거래량(만)',
+        data:[120,180,240,290,330,360,380],
+        type:'line',
+        borderColor:'#1a3a6b', borderDash:[5,3],
+        tension:0.4, pointRadius:3, yAxisID:'y2'
+      }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index'},
+    plugins:{legend:{labels:{boxWidth:10,padding:10}}},
+    scales:{
+      x:{grid:{display:false}},
+      y:{ grid:{color:'#f0f0f0'}, min:0, max:70,
+          ticks:{callback:v=>v+'%',color:'#c05621'},
+          title:{display:true,text:'0DTE 비중',color:'#c05621'} },
+      y2:{ position:'right', grid:{display:false}, min:0, max:500,
+           ticks:{callback:v=>v+'만',color:'#1a3a6b'},
+           title:{display:true,text:'총 거래량',color:'#1a3a6b'} }
+    }
+  }
+});
+
+// ── 중국 vs Fed
+_C('chinaChart', {
+  type:'line',
+  data:{
+    labels:['21.06','21.12','22.03','22.06','22.09','22.12','23.03','23.06','23.09','23.12','24.03','현재'],
+    datasets:[
+      { label:'중국 LPR 1Y(%)',
+        data:[3.85,3.80,3.70,3.70,3.65,3.65,3.65,3.55,3.45,3.45,3.45,3.45],
+        borderColor:'#c0392b', tension:0.4, pointRadius:3, yAxisID:'y' },
+      { label:'Fed Fund Rate(%)',
+        data:[0.08,0.08,0.33,1.58,3.08,4.33,4.58,5.08,5.33,5.33,5.33,5.33],
+        borderColor:'#1a5fc8', borderDash:[5,3], tension:0.4, pointRadius:3, yAxisID:'y2' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    interaction:{mode:'index'},
+    plugins:{legend:{labels:{boxWidth:10,padding:10}}},
+    scales:{
+      x:{grid:{color:'#f0f0f0'}},
+      y:{ grid:{color:'#f0f0f0'}, min:3.0, max:5.5, ticks:{callback:v=>v+'%',color:'#c0392b'},
+          title:{display:true,text:'중국 LPR',color:'#c0392b'} },
+      y2:{ position:'right', grid:{display:false}, min:0, max:6,
+           ticks:{callback:v=>v+'%',color:'#1a5fc8'},
+           title:{display:true,text:'Fed Rate',color:'#1a5fc8'} }
+    }
+  }
+});
+
+// ════════════════════════════════════════
+// LIVE DATA LOADER — data.json 연동
+// ════════════════════════════════════════
+function set(id, val) {
+  var el = document.getElementById(id);
+  if (el && val !== undefined && val !== null) el.textContent = val;
+}
+function setHTML(id, html) {
+  var el = document.getElementById(id);
+  if (el && html !== undefined && html !== null) el.innerHTML = html;
+}
+
+function colorClass(val, good, bad) {
+  if (val <= good) return 'c-up';
+  if (val >= bad)  return 'c-down';
+  return 'c-neutral';
+}
+
+function updateChart(id, labels, datasets) {
+  var c = window._charts[id];
+  if (!c) return;
+  c.data.labels = labels;
+  datasets.forEach(function(ds, i) {
+    if (c.data.datasets[i]) c.data.datasets[i].data = ds;
+  });
+  c.update('none');
+}
+
+function loadLiveData() {
+  set('data-updated', '⟳ 로딩 중...');
+  fetch('./data.json?t=' + Date.now())
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      applyData(d);
+      set('data-updated', '✓ ' + (d.meta && d.meta.updated_str ? d.meta.updated_str : '업데이트됨'));
+    })
+    .catch(function(e) {
+      set('data-updated', '⚠ data.json 없음 — python fetch_data.py 실행 필요');
+      console.warn('data.json 로드 실패:', e);
+    });
+}
+
+function applyData(d) {
+
+  // ── 유동성 탭 ──────────────────────────────
+  if (d.fed_balance) {
+    var fb = d.fed_balance.current_T;
+    set('live-fed-balance', '$' + fb.toFixed(2) + 'T');
+    set('live-fed-balance-chg', 'QT 피크($8.97T) 대비 -$' + (8.97 - fb).toFixed(2) + 'T');
+  }
+  if (d.tga) {
+    var tga = d.tga.current_B;
+    set('live-tga', '$' + Math.round(tga) + 'B');
+  }
+  if (d.rrp) {
+    var rrp = d.rrp.current_B;
+    set('live-rrp', rrp < 10 ? '$' + rrp.toFixed(1) + 'B ⚠소진' : '$' + Math.round(rrp) + 'B');
+    set('live-rrp-chg', rrp < 100 ? '↓ 고점 $2.5T 대비 사실상 소진' : '↓ 고점($2.5T) 대비 급감');
+  }
+  if (d.fed_balance && d.tga && d.rrp) {
+    var netLiq = (d.fed_balance.current_T * 1000) - d.tga.current_B - d.rrp.current_B;
+    set('live-net-liq', '$' + Math.round(netLiq) + 'B');
+  }
+  if (d.fed_funds) {
+    var ffr = d.fed_funds.current;
+    set('live-ffr', ffr.toFixed(2) + '%');
+    set('live-ffr-chg', ffr > 4.5 ? '↓ 긴축 유지 중' : ffr > 3.0 ? '→ 인하 사이클 진행 중' : '↓ 완화 구간');
+  }
+
+  // ── 금리 탭 — 수익률 곡선 전체 ──────────────────────────────
+  var maxYield = Math.max(
+    (d.us3m && d.us3m.current) || 0,
+    (d.us2y && d.us2y.current) || 0,
+    (d.us5y && d.us5y.current) || 0,
+    (d.us10y && d.us10y.current) || 0,
+    (d.us30y && d.us30y.current) || 0
+  ) || 6;
+  function yieldBar(id, val) {
+    var el = document.getElementById(id);
+    if (el && val) el.style.width = Math.round(val / maxYield * 100) + '%';
+  }
+  if (d.us3m)  { set('live-us3m',  d.us3m.current.toFixed(2)  + '%'); yieldBar('live-bar-3m',  d.us3m.current); }
+  if (d.us2y)  { set('live-us2y',  d.us2y.current.toFixed(3)  + '%'); yieldBar('live-bar-2y',  d.us2y.current); }
+  if (d.us5y)  { set('live-us5y',  d.us5y.current.toFixed(3)  + '%'); yieldBar('live-bar-5y',  d.us5y.current); }
+  if (d.us10y) { set('live-us10y', d.us10y.current.toFixed(3) + '%'); yieldBar('live-bar-10y', d.us10y.current);
+                 set('live-us10y-ycc', d.us10y.current.toFixed(3) + '%'); }
+  if (d.us30y) { set('live-us30y', d.us30y.current.toFixed(3) + '%'); yieldBar('live-bar-30y', d.us30y.current); }
+  if (d.spread_10y2y) {
+    var sp = d.spread_10y2y.current;
+    var spBp = Math.round(sp * 100);
+    var spEl = document.getElementById('live-spread');
+    var spDescEl = document.getElementById('live-spread-desc');
+    var spBadge = document.getElementById('live-spread-badge');
+    if (spEl) {
+      spEl.textContent = (sp >= 0 ? '+' : '') + spBp + 'bp';
+      spEl.style.color = sp < 0 ? 'var(--red)' : 'var(--green)';
+    }
+    if (spDescEl) {
+      spDescEl.textContent = sp < 0 ? '역전(Inversion) 지속 → 침체 우려' : '정상화 진행 중';
+      spDescEl.style.color = sp < 0 ? 'var(--red)' : 'var(--green)';
+    }
+  }
+
+  // ── 변동성 탭 ──────────────────────────────
+  if (d.vix) {
+    var vix = d.vix.current;
+    set('live-vix', vix.toFixed(1));
+    var vixEl = document.getElementById('live-vix');
+    var vixZone = document.getElementById('live-vix-zone');
+    if (vixEl) {
+      if (vix < 15)      { vixEl.className = 'vg-value c-up';      if(vixZone){vixZone.className='vg-zone c-up';    vixZone.textContent='⬡ 안정 구간';} }
+      else if (vix < 20) { vixEl.className = 'vg-value c-neutral'; if(vixZone){vixZone.className='vg-zone c-neutral';vixZone.textContent='⬡ 중립 구간';} }
+      else if (vix < 30) { vixEl.className = 'vg-value c-warn';    if(vixZone){vixZone.className='vg-zone c-warn';  vixZone.textContent='⬡ 주의 구간';} }
+      else               { vixEl.className = 'vg-value c-down';    if(vixZone){vixZone.className='vg-zone c-down';  vixZone.textContent='⬡ 공포 구간';} }
+    }
+    set('live-vix-dm', vix.toFixed(1));
+    var vixBar = document.getElementById('live-vix-bar');
+    if (vixBar) vixBar.style.width = Math.min(vix / 50 * 100, 100) + '%';
+  }
+  if (d.move) {
+    var mv = d.move.current;
+    set('live-move', mv.toFixed(0));
+    var moveEl = document.getElementById('live-move');
+    var moveZone = document.getElementById('live-move-zone');
+    if (moveEl) {
+      if (mv < 80)       { moveEl.className = 'vg-value c-up';      if(moveZone){moveZone.className='vg-zone c-up';    moveZone.textContent='⬡ 안정 구간';} }
+      else if (mv < 110) { moveEl.className = 'vg-value c-neutral'; if(moveZone){moveZone.className='vg-zone c-neutral';moveZone.textContent='⬡ 중립 구간';} }
+      else if (mv < 150) { moveEl.className = 'vg-value c-warn';    if(moveZone){moveZone.className='vg-zone c-warn';  moveZone.textContent='⬡ 주의 구간';} }
+      else               { moveEl.className = 'vg-value c-down';    if(moveZone){moveZone.className='vg-zone c-down';  moveZone.textContent='⬡ 위기 구간';} }
+    }
+    set('live-move-dm', mv.toFixed(0) + (d.vix && mv > d.vix.current ? ' ↑' : ' ↓'));
+    var moveBar = document.getElementById('live-move-bar');
+    if (moveBar) moveBar.style.width = Math.min(mv / 200 * 100, 100) + '%';
+  }
+  if (d.hyg) {
+    var hv = d.hyg.hv10;
+    set('live-hyg-hv', hv.toFixed(1));
+    var hvEl = document.getElementById('live-hyg-hv');
+    var hvZone = document.getElementById('live-hyg-hv-zone');
+    if (hvEl) {
+      if (hv < 5)        { hvEl.className = 'vg-value c-up';      if(hvZone){hvZone.className='vg-zone c-up';    hvZone.textContent='⬡ 안정 구간';} }
+      else if (hv < 10)  { hvEl.className = 'vg-value c-neutral'; if(hvZone){hvZone.className='vg-zone c-neutral';hvZone.textContent='⬡ 중립 구간';} }
+      else if (hv < 15)  { hvEl.className = 'vg-value c-warn';    if(hvZone){hvZone.className='vg-zone c-warn';  hvZone.textContent='⬡ 침체 신호 (HV≥10)';} }
+      else               { hvEl.className = 'vg-value c-down';    if(hvZone){hvZone.className='vg-zone c-down';  hvZone.textContent='⬡ 위험 (HV≥15)';} }
+    }
+  }
+
+  // ── 인플레이션 탭 ──────────────────────────────
+  if (d.cpi_annual) set('live-cpi', d.cpi_annual.current.toFixed(2) + '%');
+  if (d.bei_10y)    set('live-bei', d.bei_10y.current.toFixed(2) + '%');
+  if (d.dxy)        set('live-dxy', d.dxy.current.toFixed(2));
+  if (d.wti_uso)    set('live-wti', '$' + d.wti_uso.current.toFixed(2));
+  if (d.real_rate_10y) {
+    set('live-real-rate-desc', '실질금리(10Y-BEI): ' + d.real_rate_10y.current.toFixed(2) + '%');
+  }
+
+  // ── 크레딧 탭 ──────────────────────────────
+  if (d.ig_oas) {
+    var ig = d.ig_oas.current_bp;
+    set('live-ig-oas', Math.round(ig) + 'bp');
+    var igEl = document.getElementById('live-ig-oas');
+    if (igEl) igEl.style.color = ig > 200 ? 'var(--red)' : ig > 125 ? 'var(--yellow)' : 'var(--green)';
+  }
+  if (d.hy_oas) {
+    var hy = d.hy_oas.current_bp;
+    set('live-hy-oas', Math.round(hy) + 'bp');
+    var hyEl = document.getElementById('live-hy-oas');
+    if (hyEl) hyEl.style.color = hy > 500 ? '#7b1c1c' : hy > 350 ? 'var(--red)' : 'var(--yellow)';
+  }
+
+  // ── 경기사이클 탭 ──────────────────────────────
+  // ISM PMI — Google News RSS 자동수집 (수기 입력 불필요)
+  if (d.ism_pmi && d.ism_pmi.current) {
+    var pmiVal = d.ism_pmi.current;
+    set('live-pmi', pmiVal.toFixed(1));
+    var pmiDesc = 'Google News RSS 자동수집';
+    if (d.ism_pmi.date) pmiDesc += ' (' + d.ism_pmi.date + ')';
+    set('live-pmi-desc', pmiDesc);
+    var pmiEl = document.getElementById('live-pmi');
+    if (pmiEl) pmiEl.style.color = pmiVal > 50 ? 'var(--green)' : pmiVal > 48 ? 'var(--yellow)' : 'var(--red)';
+  }
+  if (d.unemployment) {
+    var ur = d.unemployment.current;
+    set('live-unemployment', ur.toFixed(1) + '%');
+    var urEl = document.getElementById('live-unemployment');
+    if (urEl) urEl.style.color = ur < 4.0 ? 'var(--green)' : ur < 5.0 ? 'var(--yellow)' : 'var(--red)';
+  }
+  if (d.nfp) {
+    var nfp = d.nfp.current_K;
+    set('live-nfp', (nfp >= 0 ? '+' : '') + Math.round(nfp) + 'K');
+    var nfpEl = document.getElementById('live-nfp');
+    if (nfpEl) nfpEl.style.color = nfp > 150 ? 'var(--green)' : nfp > 0 ? 'var(--yellow)' : 'var(--red)';
+  }
+  if (d.jolts) set('live-jolts', d.jolts.current_M.toFixed(2) + 'M');
+  if (d.jobless_claims) set('live-jobless', Math.round(d.jobless_claims.current_K) + 'K');
+
+  // ── YCC / 엔캐리 탭 ──────────────────────────────
+  if (d.usdjpy) set('live-usdjpy', d.usdjpy.current.toFixed(2) + ' ¥');
+  if (d.jp10y)  set('live-jp10y', d.jp10y.current.toFixed(3) + '%');
+  if (d.us_jp_spread_bp) {
+    set('live-jpn-spread', '+' + d.us_jp_spread_bp.current.toFixed(0) + 'bp');
+  }
+
+  // ── SKEW 탭 ──────────────────────────────
+  if (d.skew) {
+    var sk = d.skew.current;
+    // SKEW 현재 값을 표시하는 요소들 (텍스트로 찾아 업데이트)
+    document.querySelectorAll('[id^="live-skew"]').forEach(function(el){
+      el.textContent = sk.toFixed(1);
+    });
+  }
+
+  // ════════════════════════════════
+  // 차트 업데이트
+  // ════════════════════════════════
+
+  // VIX / MOVE 차트
+  if (d.vix && d.move) {
+    var vixLabels = d.vix.chart.labels;
+    updateChart('vixMoveChart', vixLabels, [d.vix.chart.data, d.move.chart.data]);
+  }
+
+  // HYG 차트
+  if (d.hyg) {
+    updateChart('hygChart', d.hyg.chart_price.labels, [d.hyg.chart_price.data, d.hyg.chart_hv.data]);
+  }
+
+  // 10Y-2Y 스프레드 차트
+  if (d.spread_10y2y) {
+    updateChart('spreadChart', d.spread_10y2y.chart.labels, [d.spread_10y2y.chart.data]);
+  }
+
+  // Fed 대차대조표 차트
+  if (d.fed_balance) {
+    updateChart('fedBalChart', d.fed_balance.chart.labels, [d.fed_balance.chart.data]);
+  }
+
+  // RRP 차트
+  if (d.rrp) {
+    updateChart('rrpChart', d.rrp.chart.labels, [d.rrp.chart.data]);
+  }
+
+  // 인플레 / BEI 차트 — dataset[0]=CPI(red), dataset[1]=BEI(dashed yellow)
+  if (d.cpi_annual && d.bei_10y) {
+    // CPI와 BEI 레이블을 BEI 기준으로 통일 (FRED T10YIE 일별→월별, 24M)
+    // CPI는 EODHD 매크로(월별), 길이가 다를 수 있으므로 레이블 길이에 맞춰 패딩
+    var beiLabels = d.bei_10y.chart.labels;
+    var beiData   = d.bei_10y.chart.data;
+    var cpiData   = d.cpi_annual.chart.data;
+    // CPI 데이터가 BEI보다 짧으면 앞을 null로 패딩
+    var cpiPadded = beiLabels.map(function(lbl, i) {
+      var offset = beiLabels.length - cpiData.length;
+      return i >= offset ? cpiData[i - offset] : null;
+    });
+    updateChart('inflChart', beiLabels, [cpiPadded, beiData]);
+  }
+
+  // DXY / WTI 차트
+  if (d.dxy && d.wti_uso) {
+    updateChart('dxyChart', d.dxy.chart.labels, [d.dxy.chart.data, d.wti_uso.chart.data]);
+  }
+
+  // IG / HY 크레딧 스프레드 차트
+  if (d.ig_oas && d.hy_oas) {
+    updateChart('creditSpreadChart', d.ig_oas.chart.labels, [d.ig_oas.chart.data, d.hy_oas.chart.data]);
+  }
+
+  // SPX / SKEW 차트 — 축 범위 동적 조정 (현재 SPX 6886 등 하드코딩 범위 초과 대응)
+  if (d.spx && d.skew && window._charts['skewSpxChart']) {
+    var sc = window._charts['skewSpxChart'];
+    var spxVals  = d.spx.chart.data;
+    var skewVals = d.skew.chart_skew.data;
+    var spxMin  = Math.floor(Math.min.apply(null, spxVals)  * 0.93 / 100) * 100;
+    var spxMax  = Math.ceil (Math.max.apply(null, spxVals)  * 1.05 / 100) * 100;
+    var skewMin = Math.floor(Math.min.apply(null, skewVals) / 10)  * 10 - 5;
+    var skewMax = Math.ceil (Math.max.apply(null, skewVals) / 10)  * 10 + 10;
+    sc.data.labels = d.spx.chart.labels;
+    sc.data.datasets[0].data = spxVals;
+    sc.data.datasets[1].data = skewVals;
+    sc.options.scales.y.min  = spxMin;
+    sc.options.scales.y.max  = spxMax;
+    sc.options.scales.y2.min = skewMin;
+    sc.options.scales.y2.max = skewMax;
+    sc.update('none');
+  }
+
+  // USD/JPY + 미-일 금리차 차트 (두 데이터셋 모두 실데이터)
+  if (d.usdjpy && d.us_jp_spread_bp) {
+    updateChart('yccCarryChart', d.usdjpy.chart.labels,
+      [d.usdjpy.chart.data, d.us_jp_spread_bp.chart.data]);
+  }
+
+  // 신규 실업수당 차트
+  if (d.jobless_claims) {
+    updateChart('joblessChart', d.jobless_claims.chart.labels, [d.jobless_claims.chart.data]);
+  }
+
+  // 중국차트 — Fed Funds + LPR 모두 실데이터 (CFETS JSON 자동수집)
+  if (d.fed_funds && window._charts['chinaChart']) {
+    var cc = window._charts['chinaChart'];
+    var ffL = d.fed_funds.chart.labels;
+    var ffD = d.fed_funds.chart.data;
+    // LPR: CFETS 실데이터가 있으면 사용, 없으면 마지막 알려진 값
+    var lprVal = (d.china_lpr && d.china_lpr.lpr_1y) ? d.china_lpr.lpr_1y
+                 : (cc.data.datasets[0].data.slice(-1)[0] || 3.45);
+    cc.data.labels = ffL;
+    cc.data.datasets[0].data = ffL.map(function() { return lprVal; });
+    cc.data.datasets[1].data = ffD;
+    // LPR y축 범위 동적 조정 (LPR이 3.0%대라면 min을 2.5로 낮춤)
+    if (lprVal < 3.4) {
+      cc.options.scales.y.min = 2.5;
+      cc.options.scales.y.max = 4.5;
+    }
+    cc.update('none');
+    // 배지에 LPR 날짜 표시
+    if (d.china_lpr && d.china_lpr.lpr_1y) {
+      set('live-lpr-badge', '1Y: ' + d.china_lpr.lpr_1y + '%  5Y: ' + d.china_lpr.lpr_5y + '%  (' + (d.china_lpr.date || '') + ')');
+    }
+  }
+
+  // 전략 체크리스트 — 종합 판단 신호박스 실데이터 반영
+  if (d.spread_10y2y) {
+    var sp = d.spread_10y2y.current;          // % 단위
+    var spBp = Math.round(sp * 100);           // bp로 변환
+    var spTxt = (sp < 0 ? '역전 ' : '정상 ') + spBp + 'bp';
+    setHTML('live-sig-bond', '10Y-2Y: <strong>' + spTxt + '</strong><br>FFR: ' + (d.fed_funds ? d.fed_funds.current + '%' : '—'));
+  }
+  if (d.rrp) {
+    var rrpVal = d.rrp.current_B;
+    var rrpTxt = rrpVal < 50 ? '거의 소진 $' + rrpVal + 'B' : '$' + rrpVal + 'B';
+    var fedTxt = d.fed_balance ? '$' + d.fed_balance.current_T + 'T' : '—';
+    setHTML('live-sig-liq', 'RRP: <strong>' + rrpTxt + '</strong><br>Fed 자산: ' + fedTxt);
+  }
+  if (d.move && d.vix) {
+    var mv = d.move.current, vx = d.vix.current;
+    var volDesc = (mv > 100 && vx < 20) ? '동상이몽 — 경고' : (mv > 120 ? '채권 변동성 고조' : '정상 범위');
+    setHTML('live-sig-vol', 'MOVE <strong>' + mv.toFixed(0) + '</strong> &nbsp; VIX <strong>' + vx.toFixed(1) + '</strong><br>' + volDesc);
+  }
+}
+
+// 페이지 로드 시 자동 실행
+window.addEventListener('DOMContentLoaded', function() {
+  // 차트 초기화 후 데이터 로드 (약간의 지연으로 차트 렌더링 완료 보장)
+  setTimeout(loadLiveData, 300);
+});
+</script>
+</body>
+</html>
