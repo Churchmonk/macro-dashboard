@@ -24,7 +24,10 @@ git push origin main
 
 echo.
 echo [3/3] 완료!
-echo  대시보드 URL: 아래 GitHub Pages 주소 확인
-git remote -v
+echo.
+echo  ╔════════════════════════════════════════════════════╗
+echo  ║  대시보드 URL:                                     ║
+echo  ║  https://churchmonk.github.io/macro-dashboard/    ║
+echo  ╚════════════════════════════════════════════════════╝
 echo.
 pause
