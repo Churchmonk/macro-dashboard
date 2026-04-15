@@ -857,19 +857,36 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
     </div>
   </div>
 
-  <!-- 순 유동성 시계열 차트 (전통 vs 은행 지준금) -->
+  <!-- ① 핵심: Net Liquidity vs S&P500 오버레이 차트 -->
   <div class="card" style="margin-top:16px;">
     <div class="card-title">
-      순 시중 유동성 시계열 — 전통 모델 vs 실질 은행 지준금
-      <span style="font-size:10px;color:#ffb400;font-weight:400;margin-left:8px;">★ RMP 반영 비교</span>
+      순 시중 유동성 (Net Liquidity) vs S&P500 — 상관관계 비교
+      <span style="font-size:10px;color:#4e8ef7;font-weight:400;margin-left:8px;">2022년 이후 주간 데이터</span>
     </div>
-    <div class="chart-wrap" style="height:240px;"><canvas id="netLiqChart"></canvas></div>
-    <div class="note" style="margin-top:8px;background:rgba(40,40,60,0.5);border-left:3px solid #00b482;">
+    <div class="chart-wrap" style="height:280px;"><canvas id="netLiqSpxChart"></canvas></div>
+    <div class="note" style="margin-top:8px;background:rgba(20,30,60,0.6);border-left:3px solid #4e8ef7;">
+      <span class="note-tag" style="background:#4e8ef7;color:#fff;">읽는 법</span>
+      <strong style="color:#4e8ef7;">파란 면적 (좌축)</strong> = 순 유동성 = Fed자산 − TGA − RRP ($B).
+      <strong style="color:#f7b731;">황색선 (우축)</strong> = S&P500 지수.<br>
+      <strong>두 선이 동행할 때 (정상)</strong>: 유동성 공급 → 주가 상승. 유동성 회수 → 주가 하락.<br>
+      <strong>괴리 발생 시 주의</strong>: 유동성 감소에도 주가 상승 지속 → 조정 위험 증가.
+      RRP≈$0 이후 기존 공식의 정확도 저하에 유의.
+    </div>
+  </div>
+
+  <!-- ② 보완: 순 유동성 vs 은행 지준금 (RMP 맥락) -->
+  <div class="card" style="margin-top:12px;">
+    <div class="card-title">
+      순 유동성(전통 공식) vs 은행 지준금(WRESBAL) — RMP 효과 비교
+      <span style="font-size:10px;color:#ffb400;font-weight:400;margin-left:8px;">★ 2022년 이후</span>
+    </div>
+    <div class="chart-wrap" style="height:220px;"><canvas id="netLiqChart"></canvas></div>
+    <div class="note" style="margin-top:8px;background:rgba(20,30,40,0.6);border-left:3px solid #00b482;">
       <span class="note-tag" style="background:#00b482;color:#000;">읽는 법</span>
-      <strong style="color:#4e8ef7;">파란선 (순 유동성)</strong> = Fed자산 − TGA − RRP (전통 공식, billions).
-      <strong style="color:#00b482;">초록선 (은행 지준금)</strong> = WRESBAL (실제 은행 시스템 내 달러, billions).<br>
-      RRP≈$0인 현재, 두 선의 <strong>괴리</strong>가 좁아지면서 전통 공식의 신뢰도 저하 중.
-      은행 지준금이 <strong>$3T 이하</strong>로 떨어지면 실질 유동성 위기 경고 신호.
+      <strong style="color:#4e8ef7;">파란선 (순 유동성)</strong> = Fed − TGA − RRP (전통 공식).
+      <strong style="color:#00b482;">초록선 (은행 지준금)</strong> = WRESBAL (실제 유동성 직접 척도).<br>
+      2024년 12월 RMP 시작 이후 두 선의 <strong>괴리 좁혀지는 구간</strong>이 숨겨진 QE 효과.
+      지준금 <strong>$3T 이하</strong>는 유동성 위기 경고 레벨.
     </div>
   </div>
 </div>
@@ -2369,6 +2386,74 @@ _C('rrpChart', {
   }
 });
 
+// ── Net Liquidity vs S&P500 오버레이 (주간 정렬, 듀얼 축)
+_C('netLiqSpxChart', {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [
+      {
+        label: '순 유동성 (Fed−TGA−RRP, $B)',
+        data: [],
+        borderColor: '#4e8ef7',
+        backgroundColor: 'rgba(78,142,247,0.12)',
+        fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2,
+        yAxisID: 'yNL'
+      },
+      {
+        label: 'S&P500',
+        data: [],
+        borderColor: '#f7b731',
+        backgroundColor: 'transparent',
+        fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2.5,
+        yAxisID: 'ySPX'
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: {
+        display: true, position: 'top',
+        labels: { color: '#555', font: { size: 10 }, boxWidth: 14 }
+      },
+      tooltip: {
+        callbacks: {
+          label: function(ctx) {
+            if (ctx.datasetIndex === 0) return '순유동성: $' + ctx.raw + 'B';
+            return 'SPX: ' + ctx.raw.toLocaleString();
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: '#f0f0f0' },
+        ticks: { maxTicksLimit: 10, color: '#888', font: { size: 9 } }
+      },
+      yNL: {
+        type: 'linear', position: 'left',
+        grid: { color: '#e8edf5' },
+        ticks: {
+          color: '#4e8ef7', font: { size: 9 },
+          callback: function(v) { return '$' + (v/1000).toFixed(1) + 'T'; }
+        },
+        title: { display: true, text: '순 유동성 ($B)', color: '#4e8ef7', font: { size: 9 } }
+      },
+      ySPX: {
+        type: 'linear', position: 'right',
+        grid: { drawOnChartArea: false },
+        ticks: {
+          color: '#f7b731', font: { size: 9 },
+          callback: function(v) { return v.toLocaleString(); }
+        },
+        title: { display: true, text: 'S&P500', color: '#f7b731', font: { size: 9 } }
+      }
+    }
+  }
+});
+
 // ── 순 유동성 시계열 (전통 vs 은행 지준금) — 실데이터로 applyData()에서 업데이트
 _C('netLiqChart', {
   type: 'line',
@@ -3079,6 +3164,27 @@ function applyData(d) {
   // RRP 차트
   if (d.rrp) {
     updateChart('rrpChart', d.rrp.chart.labels, [d.rrp.chart.data]);
+  }
+
+  // Net Liquidity vs S&P500 오버레이 차트
+  if (d.net_liq_spx) {
+    var nlsChart = d.net_liq_spx.chart;
+    updateChart('netLiqSpxChart', nlsChart.labels, [nlsChart.nl, nlsChart.spx]);
+    // 자동 Y축 범위: 순유동성과 SPX 각자 자동
+    var nc = window._charts['netLiqSpxChart'];
+    if (nc) {
+      var nlVals  = nlsChart.nl.filter(function(v){return v!=null;});
+      var spxVals = nlsChart.spx.filter(function(v){return v!=null;});
+      if (nlVals.length && spxVals.length) {
+        var nlPad  = (Math.max.apply(null,nlVals) - Math.min.apply(null,nlVals)) * 0.05;
+        var spxPad = (Math.max.apply(null,spxVals)- Math.min.apply(null,spxVals))* 0.05;
+        nc.options.scales.yNL.min  = Math.floor((Math.min.apply(null,nlVals)  - nlPad)  / 100) * 100;
+        nc.options.scales.yNL.max  = Math.ceil ((Math.max.apply(null,nlVals)  + nlPad)  / 100) * 100;
+        nc.options.scales.ySPX.min = Math.floor((Math.min.apply(null,spxVals) - spxPad) / 100) * 100;
+        nc.options.scales.ySPX.max = Math.ceil ((Math.max.apply(null,spxVals) + spxPad) / 100) * 100;
+        nc.update('none');
+      }
+    }
   }
 
   // 순 유동성 시계열 차트 (전통 순유동성 vs 은행 지준금)
