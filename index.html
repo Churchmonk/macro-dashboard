@@ -720,8 +720,8 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
     </div>
   </div>
 
-  <!-- KPI 5개 -->
-  <div class="grid-5" style="margin-bottom:16px;">
+  <!-- KPI 7개: 기존 5개 + 은행지준금 + RMP 누적 추가 -->
+  <div class="grid-5" style="margin-bottom:10px;">
     <div class="kpi kpi-navy">
       <div class="kpi-label">연준 총자산 (Fed B/S)</div>
       <div class="kpi-value c-navy" id="live-fed-balance">—</div>
@@ -738,13 +738,13 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
       <div class="kpi-label">역레포(RRP) 잔고</div>
       <div class="kpi-value" style="color:var(--purple);" id="live-rrp">—</div>
       <div class="kpi-change c-down" id="live-rrp-chg">고점($2.5T) 대비 급감</div>
-      <div class="kpi-desc">잉여달러 완충재 소진 중</div>
+      <div class="kpi-desc">잉여달러 완충재 사실상 소진</div>
     </div>
     <div class="kpi kpi-green">
-      <div class="kpi-label">순 시중 유동성 (추정)</div>
+      <div class="kpi-label">순 시중 유동성 (전통)</div>
       <div class="kpi-value c-up" id="live-net-liq">—</div>
-      <div class="kpi-change c-down">Fed자산 − TGA − RRP</div>
-      <div class="kpi-desc">주가와 높은 상관관계</div>
+      <div class="kpi-change c-down" id="live-net-liq-chg">Fed − TGA − RRP</div>
+      <div class="kpi-desc">⚠ RRP≈0이후 과대평가 가능</div>
     </div>
     <div class="kpi kpi-red">
       <div class="kpi-label">연방기금금리 (FFR)</div>
@@ -753,10 +753,34 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
       <div class="kpi-desc">목표: 물가 2.0% 복귀</div>
     </div>
   </div>
+  <!-- KPI 추가 행: 은행 지준금 + RMP 누적 추정 -->
+  <div class="grid-5" style="margin-bottom:16px;">
+    <div class="kpi" style="background:rgba(0,180,130,0.08);border:1px solid rgba(0,180,130,0.25);">
+      <div class="kpi-label">은행 지준금 (WRESBAL)</div>
+      <div class="kpi-value" style="color:#00b482;" id="live-wresbal">—</div>
+      <div class="kpi-change" id="live-wresbal-chg" style="color:var(--text-sub);">실질 유동성 직접 지표</div>
+      <div class="kpi-desc">준비금 ↓ = 실질 긴축 신호</div>
+    </div>
+    <div class="kpi" style="background:rgba(255,180,0,0.07);border:1px solid rgba(255,180,0,0.25);">
+      <div class="kpi-label">RMP 누적 추정 (숨겨진 QE)</div>
+      <div class="kpi-value" style="color:#ffb400;" id="live-rmp-cumul">—</div>
+      <div class="kpi-change" style="color:var(--text-sub);">TREAST 증가분 (Dec'24~)</div>
+      <div class="kpi-desc">월 $25B T-bill 매입 프로그램</div>
+    </div>
+    <div class="kpi" style="background:rgba(40,100,200,0.06);border:1px solid rgba(40,100,200,0.2);grid-column:span 3;">
+      <div class="kpi-label" style="font-size:10px;">RMP(준비금 관리 매입) 배경</div>
+      <div style="font-size:10.5px;color:var(--text-sub);line-height:1.6;margin-top:4px;">
+        연준은 2024년 12월부터 월 <strong style="color:#ffb400;">$40B→$25B</strong> 규모로 단기 T-bill을 매입하는 RMP 프로그램 운영 중.
+        QT는 계속되지만 T-bill 매입이 일부 상쇄 → <strong style="color:#00b482;">은행 지준금 감소 속도 완화</strong>.
+        이 '숨겨진 유동성'은 기존 WALCL−TGA−RRP 공식에 반영되지 않음.
+        실질 유동성 판단에는 <strong style="color:#00b482;">WRESBAL (은행 지준금)</strong>을 함께 확인 필요.
+      </div>
+    </div>
+  </div>
 
   <!-- 유동성 흐름 다이어그램 -->
   <div class="card" style="margin-bottom:16px;">
-    <div class="card-title">유동성 흐름 구조 — TGA · RRP · 연준 자산의 관계</div>
+    <div class="card-title">유동성 흐름 구조 — TGA · RRP · 연준 자산 · RMP의 관계 <span style="font-size:10px;color:#ffb400;font-weight:400;">★ RMP 채널 추가 (2024.12~)</span></div>
     <div class="liq-flow">
       <div class="liq-node">
         <div class="ln-label">미 재무부</div>
@@ -770,7 +794,7 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
       <div class="liq-node">
         <div class="ln-label">연준 (Fed)</div>
         <div class="ln-value c-navy">대차대조표</div>
-        <div class="ln-desc">QE: 자산 매입 → 달러 공급<br>QT: 자산 축소 → 달러 회수</div>
+        <div class="ln-desc">QT: 자산 축소 → 달러 회수<br><span style="color:#ffb400;font-size:10px;">★RMP: T-bill 매입 → 부분 상쇄</span></div>
       </div>
       <div class="liq-arrow">
         <span class="arrow-icon">←</span>
@@ -779,20 +803,20 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
       <div class="liq-node">
         <div class="ln-label">역레포 (RRP)</div>
         <div class="ln-value" style="color:var(--purple);">잉여달러 주차</div>
-        <div class="ln-desc">MMF 등 갈 곳 없는 달러<br>→ 연준에 하룻밤 예치</div>
+        <div class="ln-desc">MMF 등 갈 곳 없는 달러<br>→ 현재 <strong style="color:var(--red);">사실상 $0 소진</strong></div>
       </div>
       <div class="liq-arrow">
-        <span class="arrow-icon">=</span>
-        <span class="arrow-label">순 유동성</span>
+        <span class="arrow-icon">→</span>
+        <span class="arrow-label" style="color:#00b482;">은행 지준금<br>(WRESBAL)</span>
       </div>
-      <div class="liq-node liq-result">
-        <div class="ln-label">순 시중 유동성</div>
-        <div class="ln-value c-up">Fed − TGA − RRP</div>
-        <div class="ln-desc"><strong>주가와 높은 상관관계</strong><br>이 값이 줄면 자산가격 역풍</div>
+      <div class="liq-node liq-result" style="border-color:rgba(0,180,130,0.4);">
+        <div class="ln-label">은행 시스템</div>
+        <div class="ln-value" style="color:#00b482;">지준금 (WRESBAL)</div>
+        <div class="ln-desc"><strong>실질 유동성 직접 척도</strong><br>RMP → 지준금 감소 완화</div>
       </div>
     </div>
 
-    <div class="note note-yellow">
+    <div class="note note-yellow" style="margin-top:10px;">
       <span class="note-tag">TGA 핵심 개념</span>
       <strong>TGA(Treasury General Account)</strong> = 미국 재무부가 연준에 보유한 당좌계좌.<br>
       재무부가 국채를 발행해 TGA를 채우면 시중 달러 감소 (숨겨진 긴축 효과 ↑) |
@@ -802,7 +826,14 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
     <div class="note note-blue" style="margin-top:8px;">
       <span class="note-tag">RRP 핵심 개념</span>
       <strong>RRP(역레포) 잔고가 높다</strong> = 시중 잉여달러 과잉 (완충재 역할) → 실질 유동성 충격 완화<br>
-      <strong>RRP 급소진</strong> = 완충재 고갈 → QT 효과가 시중에 직격 → 유동성 절벽 위험 신호
+      <strong>RRP 급소진 (현재 ≈$0)</strong> = 완충재 고갈 → QT 효과가 시중에 직격 → 유동성 절벽 위험 신호
+    </div>
+    <div class="note" style="margin-top:8px;background:rgba(255,180,0,0.07);border-left:3px solid #ffb400;">
+      <span class="note-tag" style="background:#ffb400;color:#000;">RMP 신규 채널 (2024.12~)</span>
+      <strong>RMP(Reserve Management Purchase)</strong> = 연준이 2024년 12월부터 시행한 단기 T-bill 매입 프로그램.<br>
+      월 <strong>$25B</strong> 규모로 T-bill을 매입 → Fed 대차대조표 자산 증가 → 은행 지준금에 직접 공급.<br>
+      QT(국채/MBS 만기 축소)는 계속되지만 RMP가 일부 상쇄 → <strong style="color:#ffb400;">기존 WALCL−TGA−RRP 공식이 실질 유동성을 과소평가</strong>할 수 있음.<br>
+      정확한 판단을 위해 <strong>WRESBAL(은행 지준금)</strong>을 함께 모니터링 권장.
     </div>
   </div>
 
@@ -823,6 +854,22 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
         <strong>경고 신호:</strong> RRP 잔고가 $0에 근접하면 더 이상 흡수 완충재가 없음
         → QT + RRP 고갈 동시 발생 시 <strong>실질 유동성 충격</strong> 급발생 가능.
       </div>
+    </div>
+  </div>
+
+  <!-- 순 유동성 시계열 차트 (전통 vs 은행 지준금) -->
+  <div class="card" style="margin-top:16px;">
+    <div class="card-title">
+      순 시중 유동성 시계열 — 전통 모델 vs 실질 은행 지준금
+      <span style="font-size:10px;color:#ffb400;font-weight:400;margin-left:8px;">★ RMP 반영 비교</span>
+    </div>
+    <div class="chart-wrap" style="height:240px;"><canvas id="netLiqChart"></canvas></div>
+    <div class="note" style="margin-top:8px;background:rgba(40,40,60,0.5);border-left:3px solid #00b482;">
+      <span class="note-tag" style="background:#00b482;color:#000;">읽는 법</span>
+      <strong style="color:#4e8ef7;">파란선 (순 유동성)</strong> = Fed자산 − TGA − RRP (전통 공식, billions).
+      <strong style="color:#00b482;">초록선 (은행 지준금)</strong> = WRESBAL (실제 은행 시스템 내 달러, billions).<br>
+      RRP≈$0인 현재, 두 선의 <strong>괴리</strong>가 좁아지면서 전통 공식의 신뢰도 저하 중.
+      은행 지준금이 <strong>$3T 이하</strong>로 떨어지면 실질 유동성 위기 경고 신호.
     </div>
   </div>
 </div>
@@ -2322,6 +2369,43 @@ _C('rrpChart', {
   }
 });
 
+// ── 순 유동성 시계열 (전통 vs 은행 지준금) — 실데이터로 applyData()에서 업데이트
+_C('netLiqChart', {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [
+      {
+        label: '순 유동성 (Fed−TGA−RRP, $B)',
+        data: [],
+        borderColor: '#4e8ef7', backgroundColor: 'rgba(78,142,247,0.08)',
+        fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2,
+        yAxisID: 'y'
+      },
+      {
+        label: '은행 지준금 WRESBAL ($B)',
+        data: [],
+        borderColor: '#00b482', backgroundColor: 'rgba(0,180,130,0.08)',
+        fill: false, tension: 0.3, pointRadius: 0, borderWidth: 2,
+        yAxisID: 'y'
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: true, position: 'top',
+        labels: { color: '#555', font: { size: 10 }, boxWidth: 14 } }
+    },
+    scales: {
+      x: { grid: { color: '#f0f0f0' }, ticks: { maxTicksLimit: 8, color: '#888', font: { size: 9 } } },
+      y: { grid: { color: '#f0f0f0' },
+           ticks: { color: '#888', font: { size: 9 }, callback: v => '$' + v + 'B' } }
+    }
+  }
+});
+
 // ── 10-2Y 스프레드
 _C('spreadChart', {
   type: 'bar',
@@ -2806,6 +2890,17 @@ function applyData(d) {
   if (d.fed_balance && d.tga && d.rrp) {
     var netLiq = (d.fed_balance.current_T * 1000) - d.tga.current_B - d.rrp.current_B;
     set('live-net-liq', '$' + Math.round(netLiq) + 'B');
+    set('live-net-liq-chg', 'Fed−TGA−RRP (⚠RRP≈$0 이후 과대 추정 가능)');
+  }
+  if (d.bank_reserves) {
+    var wres = d.bank_reserves.current_B;
+    set('live-wresbal', '$' + Math.round(wres) + 'B');
+    var wresChg = wres < 3000 ? '⚠ $3T 이하 — 유동성 위기 경고' : wres < 3300 ? '↓ 감소 추세 주시' : '→ 안정 구간';
+    set('live-wresbal-chg', wresChg);
+  }
+  if (d.rmp && d.rmp.cumulative_B != null) {
+    var rmpC = d.rmp.cumulative_B;
+    set('live-rmp-cumul', (rmpC >= 0 ? '+$' : '-$') + Math.abs(rmpC).toFixed(1) + 'B');
   }
   if (d.fed_funds) {
     var ffr = d.fed_funds.current;
@@ -2984,6 +3079,20 @@ function applyData(d) {
   // RRP 차트
   if (d.rrp) {
     updateChart('rrpChart', d.rrp.chart.labels, [d.rrp.chart.data]);
+  }
+
+  // 순 유동성 시계열 차트 (전통 순유동성 vs 은행 지준금)
+  if (d.net_liq_series && d.wres_series) {
+    // 두 시리즈의 레이블을 맞춤: net_liq 기준으로 공통 레이블 사용
+    var nlLabels = d.net_liq_series.chart.labels;
+    var nlData   = d.net_liq_series.chart.data;
+    var wrData   = d.wres_series.chart.data;
+    // wres 레이블 수가 다를 경우 net_liq 기준으로 패딩
+    var wrPadded = nlLabels.map(function(lbl, i) {
+      var offset = nlLabels.length - wrData.length;
+      return i >= offset ? wrData[i - offset] : null;
+    });
+    updateChart('netLiqChart', nlLabels, [nlData, wrPadded]);
   }
 
   // 인플레 / BEI 차트 — dataset[0]=CPI(red), dataset[1]=BEI(dashed yellow)
