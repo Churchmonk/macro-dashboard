@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DS Macro Jungle — 매크로 투자 프레임워크</title>
+
+<!-- Clerk Authentication SDK -->
+<script
+  async
+  crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_c2V0dGxpbmctYWxiYWNvcmUtMy5jbGVyay5hY2NvdW50cy5kZXYk"
+  src="https://settling-albacore-3.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
+  type="text/javascript"
+></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -682,8 +691,26 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
     </div>
 
     <span class="clock" id="clock">—</span>
+
+    <!-- Clerk UserButton: 로그인된 사용자 아바타 + 로그아웃 메뉴 -->
+    <div id="clerk-user-button" style="margin-left:10px;display:flex;align-items:center;"></div>
   </div>
 </nav>
+
+<!-- ══════════════════════════════════════
+     SIGN-IN OVERLAY (로그인 안 된 사용자에게 전체 화면 표시)
+══════════════════════════════════════ -->
+<div id="clerk-auth-overlay" style="position:fixed;inset:0;background:linear-gradient(135deg,#0f2347 0%,#1a3a6b 50%,#2a5298 100%);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;">
+  <div style="text-align:center;margin-bottom:24px;color:#fff;">
+    <div style="font-size:13px;letter-spacing:2px;color:#a8c5f0;margin-bottom:6px;">DS Asset Management</div>
+    <h1 style="font-size:36px;font-weight:700;margin:0 0 8px 0;letter-spacing:1px;">
+      <span style="color:#fff;">DS</span><span style="color:#7eb6ff;"> MACRO</span><span style="color:#5a9ad8;"> JUNGLE</span>
+    </h1>
+    <p style="color:#c8dfff;font-size:13px;margin:0;">매크로 투자 프레임워크 — 로그인이 필요합니다</p>
+  </div>
+  <div id="clerk-sign-in" style="background:#fff;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.3);"></div>
+  <div id="clerk-loading" style="color:#fff;font-size:13px;margin-top:16px;">⟳ 인증 시스템 로딩 중...</div>
+</div>
 
 <!-- ══════════════════════════════════════
      HERO BANNER
@@ -3549,6 +3576,75 @@ window.addEventListener('DOMContentLoaded', function() {
   // 차트 초기화 후 데이터 로드 (약간의 지연으로 차트 렌더링 완료 보장)
   setTimeout(loadLiveData, 300);
 });
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Clerk 인증: 로그인 안 된 사용자에겐 sign-in overlay, 로그인 후 대시보드 노출
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(function() {
+  function waitForClerk() {
+    return new Promise(function(resolve) {
+      if (window.Clerk) return resolve();
+      var iv = setInterval(function() {
+        if (window.Clerk) { clearInterval(iv); resolve(); }
+      }, 50);
+      // 안전장치: 15초 후에도 로딩 안 되면 진행 (Clerk 차단된 경우)
+      setTimeout(function() { clearInterval(iv); resolve(); }, 15000);
+    });
+  }
+
+  function applyAuthState() {
+    var overlay = document.getElementById('clerk-auth-overlay');
+    var signInEl = document.getElementById('clerk-sign-in');
+    var loadingEl = document.getElementById('clerk-loading');
+    var userBtnEl = document.getElementById('clerk-user-button');
+
+    if (!window.Clerk || !window.Clerk.loaded) return;
+
+    if (window.Clerk.user) {
+      // 로그인됨 — overlay 숨기고 user button 마운트
+      if (overlay) overlay.style.display = 'none';
+      if (userBtnEl) {
+        userBtnEl.innerHTML = '';
+        try {
+          window.Clerk.mountUserButton(userBtnEl, {
+            appearance: { elements: { avatarBox: { width: 30, height: 30 } } }
+          });
+        } catch (e) { console.warn('mountUserButton:', e); }
+      }
+    } else {
+      // 로그아웃 상태 — sign-in 폼 마운트
+      if (overlay) overlay.style.display = 'flex';
+      if (loadingEl) loadingEl.style.display = 'none';
+      if (signInEl && !signInEl._mounted) {
+        try {
+          window.Clerk.mountSignIn(signInEl, {
+            appearance: {
+              elements: {
+                rootBox: { width: '100%', maxWidth: '400px' },
+                card: { boxShadow: 'none', border: 'none' }
+              }
+            }
+          });
+          signInEl._mounted = true;
+        } catch (e) { console.warn('mountSignIn:', e); }
+      }
+    }
+  }
+
+  waitForClerk().then(function() {
+    if (!window.Clerk) {
+      // Clerk 로딩 실패 — overlay에 안내 메시지
+      var loading = document.getElementById('clerk-loading');
+      if (loading) loading.textContent = '⚠ 인증 서버 연결 실패. 네트워크/광고차단을 확인해주세요.';
+      return;
+    }
+    return window.Clerk.load().then(function() {
+      applyAuthState();
+      // 로그인 상태 변화 감지
+      window.Clerk.addListener(function() { applyAuthState(); });
+    });
+  });
+})();
 </script>
 </body>
 </html>
