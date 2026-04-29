@@ -3606,7 +3606,10 @@ window.addEventListener('DOMContentLoaded', function() {
       if (userBtnEl) {
         userBtnEl.innerHTML = '';
         try {
+          var returnUrl = window.location.origin + window.location.pathname;
           window.Clerk.mountUserButton(userBtnEl, {
+            afterSignOutUrl: returnUrl,
+            afterMultiSessionSingleSignOutUrl: returnUrl,
             appearance: { elements: { avatarBox: { width: 30, height: 30 } } }
           });
         } catch (e) { console.warn('mountUserButton:', e); }
@@ -3617,7 +3620,13 @@ window.addEventListener('DOMContentLoaded', function() {
       if (loadingEl) loadingEl.style.display = 'none';
       if (signInEl && !signInEl._mounted) {
         try {
+          // 로그인/회원가입 후 현재 대시보드 페이지로 돌아오도록 명시
+          // (GitHub Pages의 / 는 churchmonk.github.io 루트라 404 — 우리 사이트는 /macro-dashboard/)
+          var returnUrl = window.location.origin + window.location.pathname;
           window.Clerk.mountSignIn(signInEl, {
+            afterSignInUrl: returnUrl,
+            afterSignUpUrl: returnUrl,
+            redirectUrl: returnUrl,
             appearance: {
               elements: {
                 rootBox: { width: '100%', maxWidth: '400px' },
