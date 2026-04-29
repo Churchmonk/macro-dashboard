@@ -8,8 +8,8 @@ echo.
 
 cd /d "%~dp0"
 
-echo [1/3] 실시간 데이터 수집 중...
-python -X utf8 fetch_data.py
+echo [1/3] 실시간 데이터 수집 중... (--full)
+python -X utf8 fetch_data.py --full
 if errorlevel 1 (
     echo [오류] 데이터 수집 실패. 종료합니다.
     pause
