@@ -670,23 +670,46 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
               style="font-size:12px;padding:4px 10px;background:#fff;border:1px solid var(--border-md);border-radius:4px;cursor:pointer;color:var(--navy);font-weight:600;">
         🔄 강제 갱신 ▾
       </button>
-      <div id="refresh-menu" style="display:none;position:absolute;right:0;top:30px;background:#fff;border:1px solid var(--border-md);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,0.1);padding:6px 0;min-width:300px;z-index:1000;font-size:12px;">
+      <div id="refresh-menu" style="display:none;position:absolute;right:0;top:30px;background:#fff;border:1px solid var(--border-md);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,0.1);padding:6px 0;min-width:320px;z-index:1000;font-size:12px;">
+
+        <!-- 1-click 즉시 실행 (Cloudflare Worker, 인증된 사용자만 동작) -->
+        <div id="instant-refresh-section" style="background:#f0f9ff;border-bottom:1px solid var(--border-md);padding:8px 14px;">
+          <div style="font-size:11px;font-weight:600;color:#0369a1;margin-bottom:6px;">⚡ 즉시 실행 (1-click)</div>
+          <div style="display:flex;gap:6px;">
+            <button onclick="triggerInstant('daily')"   style="flex:1;font-size:11px;padding:5px;background:#fff;border:1px solid #93c5fd;border-radius:3px;cursor:pointer;color:#0369a1;font-weight:600;">📈 Daily</button>
+            <button onclick="triggerInstant('weekly')"  style="flex:1;font-size:11px;padding:5px;background:#fff;border:1px solid #93c5fd;border-radius:3px;cursor:pointer;color:#0369a1;font-weight:600;">🏦 Weekly</button>
+            <button onclick="triggerInstant('monthly')" style="flex:1;font-size:11px;padding:5px;background:#fff;border:1px solid #93c5fd;border-radius:3px;cursor:pointer;color:#0369a1;font-weight:600;">📊 Monthly</button>
+          </div>
+          <div id="instant-refresh-status" style="font-size:11px;margin-top:6px;color:#7a8699;min-height:14px;"></div>
+        </div>
+
+        <!-- 수동 (GitHub Actions 페이지로 이동) -->
+        <div style="padding:6px 14px 4px;font-size:10px;font-weight:600;color:var(--text-sub);text-transform:uppercase;letter-spacing:1px;">또는 GitHub에서 수동</div>
         <a href="https://github.com/Churchmonk/macro-dashboard/actions/workflows/daily.yml" target="_blank" rel="noopener"
-           style="display:block;padding:8px 14px;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--border-md);">
-          📈 <b>Daily</b> <span style="color:var(--text-sub);">— 시장/금리/크레딧/인플레</span>
+           style="display:block;padding:6px 14px;color:var(--navy);text-decoration:none;font-size:11px;">
+          📈 <b>Daily</b> <span style="color:var(--text-sub);">— 시장/금리</span>
         </a>
         <a href="https://github.com/Churchmonk/macro-dashboard/actions/workflows/weekly.yml" target="_blank" rel="noopener"
-           style="display:block;padding:8px 14px;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--border-md);">
-          🏦 <b>Weekly</b> <span style="color:var(--text-sub);">— Fed / Net Liquidity / 실업수당</span>
+           style="display:block;padding:6px 14px;color:var(--navy);text-decoration:none;font-size:11px;">
+          🏦 <b>Weekly</b> <span style="color:var(--text-sub);">— Fed / 유동성</span>
         </a>
         <a href="https://github.com/Churchmonk/macro-dashboard/actions/workflows/monthly.yml" target="_blank" rel="noopener"
-           style="display:block;padding:8px 14px;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--border-md);">
-          📊 <b>Monthly</b> <span style="color:var(--text-sub);">— NFP / 실업률 / CPI / ISM / LPR</span>
+           style="display:block;padding:6px 14px;color:var(--navy);text-decoration:none;font-size:11px;">
+          📊 <b>Monthly</b> <span style="color:var(--text-sub);">— NFP / CPI / ISM</span>
         </a>
-        <div style="padding:8px 14px;color:var(--text-sub);font-size:11px;line-height:1.5;border-top:1px solid var(--border-md);background:#fafbfc;">
-          → GitHub 페이지에서 우측 <b>"Run workflow"</b> → <b>"Run workflow"</b> 한 번 더 클릭<br>
-          (GitHub 로그인 필요. 1~3분 후 자동 반영)
+
+        <!-- Admin 전용: 사용자 관리 -->
+        <div class="admin-only" style="display:none;border-top:1px solid var(--border-md);background:#fff7e6;padding:6px 14px 4px;font-size:10px;font-weight:600;color:#d68910;text-transform:uppercase;letter-spacing:1px;">
+          ⚙️ Admin
         </div>
+        <a href="https://dashboard.clerk.com/last-active?path=users" target="_blank" rel="noopener" class="admin-only"
+           style="display:none;padding:6px 14px;color:var(--navy);text-decoration:none;font-size:11px;">
+          👥 <b>사용자 관리</b> <span style="color:var(--text-sub);">— 발급/초대/제거</span>
+        </a>
+        <a href="https://dashboard.clerk.com/last-active?path=user-authentication/restrictions" target="_blank" rel="noopener" class="admin-only"
+           style="display:none;padding:6px 14px;color:var(--navy);text-decoration:none;font-size:11px;">
+          🔒 <b>가입 제한 설정</b> <span style="color:var(--text-sub);">— Restrictions</span>
+        </a>
       </div>
     </div>
 
@@ -3578,6 +3601,46 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 1-click 즉시 갱신 (Cloudflare Worker → GitHub Actions dispatch)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Worker URL은 사용자가 Cloudflare에 worker.js 배포 후 받은 URL로 교체.
+// 미설정(빈 문자열) 상태면 즉시 실행 버튼 클릭 시 안내 메시지 표시.
+window.WORKER_URL = "";  // 예: "https://macro-refresh.<user>.workers.dev"
+window.ADMIN_EMAIL = "aktmdgus9608@gmail.com";
+
+async function triggerInstant(mode) {
+  var status = document.getElementById('instant-refresh-status');
+  var setStatus = function(msg, color) { if (status) { status.textContent = msg; status.style.color = color || '#7a8699'; } };
+
+  if (!window.WORKER_URL) {
+    setStatus('⚠ Worker URL 미설정 — README의 배포 가이드 참고', '#c0392b');
+    return;
+  }
+  if (!window.Clerk || !window.Clerk.user) {
+    setStatus('⚠ 로그인 필요', '#c0392b');
+    return;
+  }
+
+  setStatus('⟳ ' + mode + ' 트리거 중...', '#0369a1');
+  try {
+    var token = await window.Clerk.session.getToken();
+    var resp = await fetch(window.WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ mode: mode }),
+    });
+    var data = await resp.json().catch(function() { return {}; });
+    if (resp.ok && data.success) {
+      setStatus('✓ ' + mode + ' 워크플로 실행됨 (1~3분 후 자동 반영)', '#0a9c4a');
+    } else {
+      setStatus('✗ 실패: ' + (data.error || resp.status), '#c0392b');
+    }
+  } catch (e) {
+    setStatus('✗ 네트워크 오류: ' + e.message, '#c0392b');
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Clerk 인증: 로그인 안 된 사용자에겐 sign-in overlay, 로그인 후 대시보드 노출
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 (function() {
@@ -3603,6 +3666,15 @@ window.addEventListener('DOMContentLoaded', function() {
     if (window.Clerk.user) {
       // 로그인됨 — overlay 숨기고 user button 마운트
       if (overlay) overlay.style.display = 'none';
+
+      // Admin 여부 체크 → admin-only 요소 표시
+      var emailObj = window.Clerk.user.primaryEmailAddress;
+      var email = emailObj && emailObj.emailAddress ? emailObj.emailAddress.toLowerCase() : '';
+      var isAdmin = (email === window.ADMIN_EMAIL.toLowerCase());
+      document.querySelectorAll('.admin-only').forEach(function(el) {
+        el.style.display = isAdmin ? '' : 'none';
+      });
+
       if (userBtnEl) {
         userBtnEl.innerHTML = '';
         try {
