@@ -10,6 +10,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: macro-data-update
+  cancel-in-progress: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -38,10 +42,17 @@ jobs:
         run: |
           if git diff --quiet data.json; then
             echo "::notice::data.json unchanged — skip commit"
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data.json
-            git commit -m "data(weekly): $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M KST')"
-            git push
+            exit 0
           fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git commit -m "data(weekly): $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M KST')"
+          for i in 1 2 3 4 5; do
+            if git push; then exit 0; fi
+            echo "::warning::push attempt $i failed — rebase + retry"
+            git pull --rebase origin main || git rebase --abort || true
+            sleep $((i * 2))
+          done
+          echo "::error::push failed after 5 attempts"
+          exit 1
