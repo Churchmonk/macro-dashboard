@@ -6,6 +6,11 @@
 # Logs
 logs/
 
+# Editor / IDE state
+.claude/
+.vscode/
+.idea/
+
 # Python
 *.pyc
 __pycache__/

@@ -58,7 +58,9 @@ EODHD_EOD   = "https://eodhd.com/api/eod"
 EODHD_MACRO = "https://eodhd.com/api/macro-indicator"
 FRED_OBS    = "https://api.stlouisfed.org/fred/series/observations"
 
-OUTPUT_PATH = "data.json"
+OUTPUT_PATH  = "data.json"
+HISTORY_PATH = "history.json"
+HISTORY_LIMIT = 100   # 최근 N건 보존 (FIFO)
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -170,6 +172,79 @@ def load_existing():
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
+
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# History (갱신 기록) — 사용자가 어떤 부분이 언제 변경됐는지 확인할 수 있도록
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# 비교 대상 필드: 각 키의 'current' / 'current_T' / 'current_B' / 'current_K' /
+#               'current_M' / 'current_bp' / 'lpr_1y' / 'lpr_5y' / 'cumulative_B' / 'hv10'
+_CURRENT_FIELDS = (
+    "current", "current_T", "current_B", "current_K", "current_M", "current_bp",
+    "lpr_1y", "lpr_5y", "cumulative_B", "hv10"
+)
+
+
+def _extract_scalar(node):
+    """data.json의 한 키에서 비교용 스칼라 (key, value) 페어 리스트 추출."""
+    if not isinstance(node, dict):
+        return []
+    out = []
+    for f in _CURRENT_FIELDS:
+        if f in node and not isinstance(node[f], (dict, list)):
+            out.append((f, node[f]))
+    return out
+
+
+def compute_diff(old_data, new_data, mode_keys):
+    """
+    이번 모드에서 갱신된 키들에 대해 old vs new 비교.
+    Returns:
+        {
+          'keys_updated': [k1, k2, ...],       # 실제로 값이 바뀐 키만
+          'keys_touched': [k1, k2, ...],       # 모드가 다룬 키 전체 (변경 없어도 포함)
+          'diffs': {key.field: {old, new}}     # 변경된 스칼라 필드 모음
+        }
+    """
+    diffs = {}
+    keys_updated = []
+    for k in mode_keys:
+        old_node = (old_data or {}).get(k, {})
+        new_node = (new_data or {}).get(k, {})
+        old_scalars = dict(_extract_scalar(old_node))
+        new_scalars = dict(_extract_scalar(new_node))
+        changed = False
+        for f, nv in new_scalars.items():
+            ov = old_scalars.get(f)
+            if ov != nv:
+                diffs[f"{k}.{f}"] = {"old": ov, "new": nv}
+                changed = True
+        if changed:
+            keys_updated.append(k)
+    return {
+        "keys_updated": keys_updated,
+        "keys_touched": list(mode_keys),
+        "diffs": diffs,
+    }
+
+
+def append_history(event):
+    """history.json에 event append (LIFO, 최대 HISTORY_LIMIT건 보존)."""
+    try:
+        with open(HISTORY_PATH, "r", encoding="utf-8") as f:
+            existing = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        existing = {"events": []}
+    events = existing.get("events", [])
+    events.insert(0, event)  # 최신을 맨 앞에
+    events = events[:HISTORY_LIMIT]
+    payload = {
+        "updated_at": datetime.now().isoformat(),
+        "limit": HISTORY_LIMIT,
+        "events": events,
+    }
+    with open(HISTORY_PATH, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
 
 
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -522,6 +597,7 @@ def main():
     print(f"  {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 50)
 
+    started_at = time.time()
     existing = load_existing()
     patch = {}
 
@@ -559,6 +635,47 @@ def main():
 
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
         json.dump(merged, f, ensure_ascii=False, indent=2)
+
+    # ── History 기록 ─────────────────────────────────────────
+    diff = compute_diff(existing, merged, list(patch.keys()))
+    duration_sec = round(time.time() - started_at, 1)
+
+    # Trigger 추정: GitHub Actions 환경변수 우선
+    gh_event = os.environ.get("GITHUB_EVENT_NAME")  # schedule / workflow_dispatch / push
+    gh_run_id = os.environ.get("GITHUB_RUN_ID")
+    gh_workflow = os.environ.get("GITHUB_WORKFLOW")
+    gh_actor = os.environ.get("GITHUB_TRIGGERING_ACTOR") or os.environ.get("GITHUB_ACTOR")
+    if gh_event:
+        trigger = gh_event  # 'schedule' or 'workflow_dispatch'
+    else:
+        trigger = "manual_local"
+
+    if not patch:
+        status = "no_data"        # 모든 fetch 실패
+    elif diff["keys_updated"]:
+        status = "success"        # 값이 실제로 바뀜
+    else:
+        status = "unchanged"      # fetch는 성공, 단 값은 이전과 동일
+
+    event = {
+        "timestamp":     now_iso,
+        "timestamp_kst": now_str,
+        "mode":          mode,
+        "trigger":       trigger,
+        "actor":         gh_actor,
+        "duration_sec":  duration_sec,
+        "keys_touched":  diff["keys_touched"],
+        "keys_updated":  diff["keys_updated"],
+        "diffs":         diff["diffs"],
+        "status":        status,
+        "github_run_id": gh_run_id,
+        "github_workflow": gh_workflow,
+    }
+    try:
+        append_history(event)
+        print(f"  ✓ history.json 기록 — 변경 {len(diff['keys_updated'])}/{len(diff['keys_touched'])} 키")
+    except Exception as e:
+        print(f"  ⚠ history.json 기록 실패: {e}")
 
     print("\n" + "=" * 50)
     print(f"  ✅ data.json 저장 — {len(patch)}개 키 갱신")

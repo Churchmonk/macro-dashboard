@@ -45,11 +45,11 @@ jobs:
 
             python -X utf8 fetch_data.py --daily
 
-            if git diff --quiet data.json; then
-              echo "::notice::data.json unchanged — skip commit"
+            if git diff --quiet data.json history.json 2>/dev/null; then
+              echo "::notice::data.json/history.json unchanged — skip commit"
               exit 0
             fi
-            git add data.json
+            git add data.json history.json
             git commit -m "data(daily): $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M KST')"
 
             if git push; then exit 0; fi

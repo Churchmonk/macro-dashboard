@@ -654,6 +654,33 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
     </div>
     <span style="font-size:12px;color:var(--text-sub);margin-right:8px;" id="data-updated">데이터 로딩 중...</span>
     <button onclick="loadLiveData()" style="font-size:12px;padding:4px 10px;background:var(--navy-light);border:1px solid var(--border-md);border-radius:4px;cursor:pointer;color:var(--navy);font-weight:600;">⟳ 새로고침</button>
+
+    <!-- 수동 강제 갱신 드롭다운 (GitHub Actions) -->
+    <div style="position:relative;display:inline-block;margin-left:6px;">
+      <button id="refresh-trigger-btn" onclick="(function(m){m.style.display=(m.style.display==='block'?'none':'block');})(document.getElementById('refresh-menu'))"
+              style="font-size:12px;padding:4px 10px;background:#fff;border:1px solid var(--border-md);border-radius:4px;cursor:pointer;color:var(--navy);font-weight:600;">
+        🔄 강제 갱신 ▾
+      </button>
+      <div id="refresh-menu" style="display:none;position:absolute;right:0;top:30px;background:#fff;border:1px solid var(--border-md);border-radius:6px;box-shadow:0 4px 14px rgba(0,0,0,0.1);padding:6px 0;min-width:300px;z-index:1000;font-size:12px;">
+        <a href="https://github.com/Churchmonk/macro-dashboard/actions/workflows/daily.yml" target="_blank" rel="noopener"
+           style="display:block;padding:8px 14px;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--border-md);">
+          📈 <b>Daily</b> <span style="color:var(--text-sub);">— 시장/금리/크레딧/인플레</span>
+        </a>
+        <a href="https://github.com/Churchmonk/macro-dashboard/actions/workflows/weekly.yml" target="_blank" rel="noopener"
+           style="display:block;padding:8px 14px;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--border-md);">
+          🏦 <b>Weekly</b> <span style="color:var(--text-sub);">— Fed / Net Liquidity / 실업수당</span>
+        </a>
+        <a href="https://github.com/Churchmonk/macro-dashboard/actions/workflows/monthly.yml" target="_blank" rel="noopener"
+           style="display:block;padding:8px 14px;color:var(--navy);text-decoration:none;border-bottom:1px solid var(--border-md);">
+          📊 <b>Monthly</b> <span style="color:var(--text-sub);">— NFP / 실업률 / CPI / ISM / LPR</span>
+        </a>
+        <div style="padding:8px 14px;color:var(--text-sub);font-size:11px;line-height:1.5;border-top:1px solid var(--border-md);background:#fafbfc;">
+          → GitHub 페이지에서 우측 <b>"Run workflow"</b> → <b>"Run workflow"</b> 한 번 더 클릭<br>
+          (GitHub 로그인 필요. 1~3분 후 자동 반영)
+        </div>
+      </div>
+    </div>
+
     <span class="clock" id="clock">—</span>
   </div>
 </nav>
@@ -701,6 +728,7 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
   <a class="subnav-tab" href="#" data-tab="tab-skew">SKEW / 왜도</a>
   <a class="subnav-tab" href="#" data-tab="tab-0dte">0DTE / 감마</a>
   <a class="subnav-tab" href="#" data-tab="tab-strategy">전략 체크리스트</a>
+  <a class="subnav-tab" href="#" data-tab="tab-history">📜 갱신 기록</a>
 </div>
 
 
@@ -2288,6 +2316,67 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
 
 </div><!-- /tab-strategy -->
 
+
+<!-- ══════════════════════════════════════
+     SECTION : 갱신 기록 (Update History)
+══════════════════════════════════════ -->
+<div class="tab-panel" id="tab-history" style="display:none;">
+<div class="section">
+  <div class="section-hd">
+    <div class="section-hd-bar"></div>
+    <span class="section-hd-title">갱신 기록 (Update History)</span>
+    <span class="section-hd-sub">— 자동/수동 리프레시마다 변경된 지표를 기록합니다 (최대 100건)</span>
+    <div class="section-hd-right">
+      <button onclick="loadHistory()" style="font-size:12px;padding:4px 10px;background:var(--navy-light);border:1px solid var(--border-md);border-radius:4px;cursor:pointer;color:var(--navy);font-weight:600;">⟳ 새로고침</button>
+    </div>
+  </div>
+
+  <!-- 요약 카드 -->
+  <div id="history-summary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0;">
+    <div style="background:#fff;border:1px solid var(--border-md);border-radius:var(--radius);padding:12px;text-align:center;">
+      <div style="font-size:11px;color:var(--text-sub);">총 기록</div>
+      <div id="hist-total" style="font-size:22px;font-weight:700;color:var(--navy);">—</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border-md);border-radius:var(--radius);padding:12px;text-align:center;">
+      <div style="font-size:11px;color:var(--text-sub);">최근 Daily</div>
+      <div id="hist-last-daily" style="font-size:13px;font-weight:600;color:var(--navy);">—</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border-md);border-radius:var(--radius);padding:12px;text-align:center;">
+      <div style="font-size:11px;color:var(--text-sub);">최근 Weekly</div>
+      <div id="hist-last-weekly" style="font-size:13px;font-weight:600;color:var(--navy);">—</div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--border-md);border-radius:var(--radius);padding:12px;text-align:center;">
+      <div style="font-size:11px;color:var(--text-sub);">최근 Monthly</div>
+      <div id="hist-last-monthly" style="font-size:13px;font-weight:600;color:var(--navy);">—</div>
+    </div>
+  </div>
+
+  <!-- 기록 테이블 -->
+  <div style="background:#fff;border:1px solid var(--border-md);border-radius:var(--radius);overflow:hidden;">
+    <table id="history-table" style="width:100%;border-collapse:collapse;font-size:12px;">
+      <thead style="background:#f5f7fa;">
+        <tr>
+          <th style="text-align:left;padding:10px 14px;border-bottom:1px solid var(--border-md);">시각 (KST)</th>
+          <th style="text-align:left;padding:10px 14px;border-bottom:1px solid var(--border-md);">모드</th>
+          <th style="text-align:left;padding:10px 14px;border-bottom:1px solid var(--border-md);">트리거</th>
+          <th style="text-align:right;padding:10px 14px;border-bottom:1px solid var(--border-md);">변경 / 다룬</th>
+          <th style="text-align:right;padding:10px 14px;border-bottom:1px solid var(--border-md);">소요</th>
+          <th style="text-align:center;padding:10px 14px;border-bottom:1px solid var(--border-md);">상태</th>
+          <th style="text-align:center;padding:10px 14px;border-bottom:1px solid var(--border-md);">상세</th>
+        </tr>
+      </thead>
+      <tbody id="history-tbody">
+        <tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-sub);">로딩 중...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 상세 패널 (행 클릭 시 표시) -->
+  <div id="history-detail" style="margin-top:16px;"></div>
+</div>
+</div><!-- /tab-history -->
+
+
 <!-- FOOTER -->
 <div style="text-align:center;padding:28px 0;color:var(--text-muted);font-size:13px;border-top:1px solid var(--border);margin-top:12px;">
   DS Asset Management — Macro Intelligence Dashboard &nbsp;|&nbsp;
@@ -2954,6 +3043,162 @@ function loadLiveData() {
       console.warn('data.json 로드 실패:', e);
     });
 }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 갱신 기록 (history.json) 로드 + 렌더
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function loadHistory() {
+  var tbody = document.getElementById('history-tbody');
+  if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:#7a8699;">⟳ 로딩 중...</td></tr>';
+  fetch('./history.json?t=' + Date.now())
+    .then(function(r) { return r.ok ? r.json() : { events: [] }; })
+    .then(function(d) { renderHistory(d.events || []); })
+    .catch(function(e) {
+      console.warn('history.json 로드 실패:', e);
+      if (tbody) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:#c0392b;">⚠ history.json 아직 없음 — 첫 갱신이 실행되면 생성됩니다</td></tr>';
+    });
+}
+
+function _triggerLabel(t) {
+  var map = {
+    'schedule': '⏰ 자동 (cron)',
+    'workflow_dispatch': '👆 수동 (GitHub)',
+    'manual_local': '💻 로컬 (.bat)',
+    'push': '📥 push 트리거'
+  };
+  return map[t] || t || '—';
+}
+
+function _modeBadge(m) {
+  var color = { daily: '#2a5298', weekly: '#0a9c4a', monthly: '#9c4a0a', full: '#5a3a8a' }[m] || '#555';
+  return '<span style="display:inline-block;padding:2px 8px;background:' + color + ';color:#fff;border-radius:10px;font-size:11px;font-weight:600;">' + m + '</span>';
+}
+
+function _statusBadge(s) {
+  var map = {
+    'success':   '<span style="color:#0a9c4a;font-weight:600;">✓ 변경</span>',
+    'unchanged': '<span style="color:#7a8699;font-weight:600;">— 동일</span>',
+    'partial':   '<span style="color:#d68910;font-weight:600;">⚠ 부분</span>',
+    'no_data':   '<span style="color:#c0392b;font-weight:600;">✗ 실패</span>'
+  };
+  return map[s] || s;
+}
+
+function _shortTime(ts, kst) {
+  if (kst) return kst;  // 서버가 이미 KST 문자열 제공 시 그대로
+  if (!ts) return '—';
+  var d = new Date(ts);
+  if (isNaN(d.getTime())) return ts;
+  return d.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', hour12: false }).replace(/\.\s*$/, '');
+}
+
+function renderHistory(events) {
+  var tbody = document.getElementById('history-tbody');
+  if (!tbody) return;
+  if (events.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px;color:#7a8699;">기록이 없습니다.</td></tr>';
+    return;
+  }
+
+  // 요약 카드
+  document.getElementById('hist-total').textContent = events.length;
+  function lastByMode(m) {
+    var e = events.find(function(x) { return x.mode === m || (m === 'daily' && x.mode === 'full'); });
+    return e ? _shortTime(e.timestamp, e.timestamp_kst) : '—';
+  }
+  document.getElementById('hist-last-daily').textContent   = lastByMode('daily');
+  document.getElementById('hist-last-weekly').textContent  = lastByMode('weekly');
+  document.getElementById('hist-last-monthly').textContent = lastByMode('monthly');
+
+  // 행
+  var html = '';
+  events.forEach(function(ev, i) {
+    var keysCount = (ev.keys_updated || []).length + ' / ' + (ev.keys_touched || []).length;
+    var dur = (ev.duration_sec != null) ? ev.duration_sec.toFixed(1) + 's' : '—';
+    html += '<tr style="border-bottom:1px solid #e2e8f0;">' +
+      '<td style="padding:10px 14px;font-family:monospace;font-size:11px;">' + _shortTime(ev.timestamp, ev.timestamp_kst) + '</td>' +
+      '<td style="padding:10px 14px;">' + _modeBadge(ev.mode) + '</td>' +
+      '<td style="padding:10px 14px;font-size:11px;color:#555;">' + _triggerLabel(ev.trigger) + (ev.actor ? ' <span style="color:#aaa;">/ ' + ev.actor + '</span>' : '') + '</td>' +
+      '<td style="padding:10px 14px;text-align:right;font-family:monospace;">' + keysCount + '</td>' +
+      '<td style="padding:10px 14px;text-align:right;font-family:monospace;font-size:11px;color:#555;">' + dur + '</td>' +
+      '<td style="padding:10px 14px;text-align:center;">' + _statusBadge(ev.status) + '</td>' +
+      '<td style="padding:10px 14px;text-align:center;"><button onclick="showHistoryDetail(' + i + ')" style="font-size:11px;padding:3px 10px;background:#fff;border:1px solid #cbd5e1;border-radius:3px;cursor:pointer;">▾ 보기</button></td>' +
+    '</tr>';
+  });
+  tbody.innerHTML = html;
+  window._historyEvents = events;
+  document.getElementById('history-detail').innerHTML = '';
+}
+
+function showHistoryDetail(idx) {
+  var ev = (window._historyEvents || [])[idx];
+  if (!ev) return;
+  var div = document.getElementById('history-detail');
+  var diffs = ev.diffs || {};
+  var diffKeys = Object.keys(diffs);
+
+  var html = '<div style="background:#fff;border:1px solid #cbd5e1;border-radius:6px;padding:16px;">';
+  html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">';
+  html += '<div><b style="font-size:14px;">' + _shortTime(ev.timestamp, ev.timestamp_kst) + '</b> ' + _modeBadge(ev.mode) + ' &nbsp; ' + _statusBadge(ev.status) + '</div>';
+  html += '<button onclick="document.getElementById(\'history-detail\').innerHTML=\'\'" style="background:none;border:none;font-size:18px;cursor:pointer;color:#888;">✕</button>';
+  html += '</div>';
+  html += '<div style="font-size:12px;color:#555;margin-bottom:12px;">';
+  html += '트리거: ' + _triggerLabel(ev.trigger);
+  if (ev.actor) html += ' / actor: <code>' + ev.actor + '</code>';
+  if (ev.duration_sec != null) html += ' / 소요: <code>' + ev.duration_sec.toFixed(1) + 's</code>';
+  if (ev.github_run_id) html += ' / <a href="https://github.com/Churchmonk/macro-dashboard/actions/runs/' + ev.github_run_id + '" target="_blank" rel="noopener">GitHub Run #' + ev.github_run_id + '</a>';
+  html += '</div>';
+  html += '<div style="font-size:12px;color:#555;margin-bottom:8px;">다룬 키 (' + (ev.keys_touched || []).length + '): <code style="font-size:11px;">' + (ev.keys_touched || []).join(', ') + '</code></div>';
+
+  if (diffKeys.length === 0) {
+    html += '<div style="background:#f5f7fa;border-radius:4px;padding:14px;color:#7a8699;font-size:12px;">변경된 값이 없습니다 (모든 지표가 이전과 동일).</div>';
+  } else {
+    html += '<table style="width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;">';
+    html += '<thead><tr style="background:#f5f7fa;">';
+    html += '<th style="text-align:left;padding:8px 12px;border-bottom:1px solid #cbd5e1;">지표</th>';
+    html += '<th style="text-align:right;padding:8px 12px;border-bottom:1px solid #cbd5e1;">이전</th>';
+    html += '<th style="text-align:right;padding:8px 12px;border-bottom:1px solid #cbd5e1;">이후</th>';
+    html += '<th style="text-align:right;padding:8px 12px;border-bottom:1px solid #cbd5e1;">변화</th>';
+    html += '</tr></thead><tbody>';
+    diffKeys.forEach(function(k) {
+      var d = diffs[k];
+      var deltaTxt = '—', deltaColor = '#555';
+      if (typeof d.old === 'number' && typeof d.new === 'number') {
+        var delta = d.new - d.old;
+        deltaTxt = (delta >= 0 ? '+' : '') + delta.toFixed(Math.abs(delta) < 1 ? 3 : 2);
+        deltaColor = delta > 0 ? '#0a9c4a' : (delta < 0 ? '#c0392b' : '#555');
+      }
+      html += '<tr style="border-bottom:1px solid #e2e8f0;">';
+      html += '<td style="padding:6px 12px;font-family:monospace;font-size:11px;">' + k + '</td>';
+      html += '<td style="padding:6px 12px;text-align:right;font-family:monospace;color:#888;">' + (d.old != null ? d.old : '—') + '</td>';
+      html += '<td style="padding:6px 12px;text-align:right;font-family:monospace;font-weight:600;">' + (d.new != null ? d.new : '—') + '</td>';
+      html += '<td style="padding:6px 12px;text-align:right;font-family:monospace;color:' + deltaColor + ';font-weight:600;">' + deltaTxt + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+  }
+  html += '</div>';
+  div.innerHTML = html;
+  div.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// 페이지 로드 시 한 번 자동 로드 + 갱신 기록 탭 클릭 시 새로고침
+document.addEventListener('DOMContentLoaded', function() {
+  loadHistory();
+  document.querySelectorAll('.subnav-tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      if (this.getAttribute('data-tab') === 'tab-history') loadHistory();
+    });
+  });
+  // 드롭다운 외부 클릭 시 닫기
+  document.addEventListener('click', function(e) {
+    var menu = document.getElementById('refresh-menu');
+    var btn  = document.getElementById('refresh-trigger-btn');
+    if (menu && btn && !btn.contains(e.target) && !menu.contains(e.target)) {
+      menu.style.display = 'none';
+    }
+  });
+});
 
 function applyData(d) {
 
