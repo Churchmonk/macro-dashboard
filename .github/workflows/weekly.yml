@@ -17,7 +17,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -32,27 +32,30 @@ jobs:
       - name: Install dependencies (weekly — API only)
         run: pip install requests python-dotenv
 
-      - name: Fetch weekly data
+      - name: Fetch + commit + push (race-safe)
         env:
           EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-        run: python -X utf8 fetch_data.py --weekly
-
-      - name: Commit and push if data.json changed
         run: |
-          if git diff --quiet data.json; then
-            echo "::notice::data.json unchanged — skip commit"
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data.json
-          git commit -m "data(weekly): $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M KST')"
-          for i in 1 2 3 4 5; do
+
+          for i in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+
+            python -X utf8 fetch_data.py --weekly
+
+            if git diff --quiet data.json; then
+              echo "::notice::data.json unchanged — skip commit"
+              exit 0
+            fi
+            git add data.json
+            git commit -m "data(weekly): $(TZ=Asia/Seoul date +'%Y-%m-%d %H:%M KST')"
+
             if git push; then exit 0; fi
-            echo "::warning::push attempt $i failed — rebase + retry"
-            git pull --rebase origin main || git rebase --abort || true
-            sleep $((i * 2))
+            echo "::warning::push attempt $i failed — re-fetch on latest main"
+            sleep $((i * 3))
           done
-          echo "::error::push failed after 5 attempts"
+          echo "::error::push failed after 3 attempts"
           exit 1
