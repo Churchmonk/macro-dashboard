@@ -664,8 +664,8 @@ hr.sep { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
     <span style="font-size:12px;color:var(--text-sub);margin-right:8px;" id="data-updated">데이터 로딩 중...</span>
     <button onclick="loadLiveData()" style="font-size:12px;padding:4px 10px;background:var(--navy-light);border:1px solid var(--border-md);border-radius:4px;cursor:pointer;color:var(--navy);font-weight:600;">⟳ 새로고침</button>
 
-    <!-- 수동 강제 갱신 드롭다운 (GitHub Actions) -->
-    <div style="position:relative;display:inline-block;margin-left:6px;">
+    <!-- 수동 강제 갱신 드롭다운 (GitHub Actions) — admin 전용 -->
+    <div class="admin-only" data-display="inline-block" style="display:none;position:relative;margin-left:6px;">
       <button id="refresh-trigger-btn" onclick="(function(m){m.style.display=(m.style.display==='block'?'none':'block');})(document.getElementById('refresh-menu'))"
               style="font-size:12px;padding:4px 10px;background:#fff;border:1px solid var(--border-md);border-radius:4px;cursor:pointer;color:var(--navy);font-weight:600;">
         🔄 강제 갱신 ▾
@@ -3672,7 +3672,8 @@ async function triggerInstant(mode) {
       var email = emailObj && emailObj.emailAddress ? emailObj.emailAddress.toLowerCase() : '';
       var isAdmin = (email === window.ADMIN_EMAIL.toLowerCase());
       document.querySelectorAll('.admin-only').forEach(function(el) {
-        el.style.display = isAdmin ? '' : 'none';
+        // data-display attribute가 있으면 그 값으로, 없으면 element default ('')
+        el.style.display = isAdmin ? (el.dataset.display || '') : 'none';
       });
 
       if (userBtnEl) {

@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: macro-data-update
@@ -73,3 +74,33 @@ jobs:
           done
           echo "::error::push failed after 3 attempts"
           exit 1
+
+      - name: Notify on failure (open or update GitHub issue)
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const mode = 'monthly';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const title = `🚨 ${mode} workflow 실패 (자동 감지)`;
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: 'auto-failed,' + mode
+            });
+            if (issues.data.length > 0) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: issues.data[0].number,
+                body: `🔁 다시 실패: ${runUrl}`
+              });
+            } else {
+              const body = `워크플로 \`${mode}\` 실행 실패.\n\n` +
+                           `- 시각: ${new Date().toISOString()}\n` +
+                           `- 링크: ${runUrl}\n\n` +
+                           `자동 cron이 다음 트리거에서 자동 복구될 수도 있음.\n` +
+                           `해결 후 이 issue를 닫으면 다음 실패 시 새 issue로 다시 알림.`;
+              await github.rest.issues.create({
+                owner: context.repo.owner, repo: context.repo.repo,
+                title, body, labels: ['auto-failed', mode]
+              });
+            }
