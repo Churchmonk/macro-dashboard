@@ -1,7 +1,56 @@
 {
-  "updated_at": "2026-05-09T00:07:31.587490",
+  "updated_at": "2026-05-09T23:59:48.342797",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-05-09T23:59:48.340708",
+      "timestamp_kst": "2026-05-09 23:59 KST",
+      "mode": "daily",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 6.3,
+      "keys_touched": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "keys_updated": [
+        "move",
+        "gold"
+      ],
+      "diffs": {
+        "move.current": {
+          "old": 67.3,
+          "new": 67.2
+        },
+        "gold.current": {
+          "old": 4709.0,
+          "new": 4715.0
+        }
+      },
+      "status": "success",
+      "github_run_id": "25615027552",
+      "github_workflow": "Daily macro update"
+    },
     {
       "timestamp": "2026-05-09T00:07:31.585407",
       "timestamp_kst": "2026-05-09 00:07 KST",
