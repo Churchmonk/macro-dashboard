@@ -1,10 +1,10 @@
 {
   "meta": {
-    "updated_at": "2026-05-30T00:16:10.156341",
-    "updated_str": "2026-05-30 00:16 KST",
+    "updated_at": "2026-05-31T00:12:29.547098",
+    "updated_str": "2026-05-31 00:12 KST",
     "last_mode": "daily",
     "last_full_at": null,
-    "last_daily_at": "2026-05-30T00:16:10.156341",
+    "last_daily_at": "2026-05-31T00:12:29.547098",
     "last_weekly_at": "2026-05-28T22:56:18.254301",
     "last_monthly_at": "2026-05-21T06:02:58.631867"
   },
@@ -1877,7 +1877,7 @@
     }
   },
   "bei_10y": {
-    "current": 2.39,
+    "current": 2.38,
     "chart": {
       "labels": [
         "24.06",
@@ -1929,7 +1929,7 @@
         2.25,
         2.3,
         2.46,
-        2.39
+        2.38
       ]
     }
   },
@@ -1991,7 +1991,7 @@
     }
   },
   "real_rate_10y": {
-    "current": 2.05
+    "current": 2.06
   },
   "unemployment": {
     "current": 4.3,
