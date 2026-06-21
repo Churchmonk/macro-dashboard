@@ -1,7 +1,41 @@
 {
-  "updated_at": "2026-06-21T00:18:52.418172",
+  "updated_at": "2026-06-21T06:44:40.766353",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-06-21T06:44:40.763451",
+      "timestamp_kst": "2026-06-21 06:44 KST",
+      "mode": "monthly",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 35.5,
+      "keys_touched": [
+        "fed_funds",
+        "unemployment",
+        "nfp",
+        "jolts",
+        "cpi_annual",
+        "ism_pmi",
+        "china_lpr"
+      ],
+      "keys_updated": [
+        "nfp",
+        "jolts"
+      ],
+      "diffs": {
+        "nfp.current_K": {
+          "old": 115.0,
+          "new": 172.0
+        },
+        "jolts.current_M": {
+          "old": 6.87,
+          "new": 7.62
+        }
+      },
+      "status": "success",
+      "github_run_id": "27896281581",
+      "github_workflow": "Monthly macro update"
+    },
     {
       "timestamp": "2026-06-21T00:18:52.415572",
       "timestamp_kst": "2026-06-21 00:18 KST",
