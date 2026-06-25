@@ -1,7 +1,52 @@
 {
-  "updated_at": "2026-06-25T00:20:29.126269",
+  "updated_at": "2026-06-25T22:55:41.872896",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-06-25T22:55:41.870433",
+      "timestamp_kst": "2026-06-25 22:55 KST",
+      "mode": "weekly",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 3.1,
+      "keys_touched": [
+        "fed_balance",
+        "tga",
+        "bank_reserves",
+        "wres_series",
+        "rmp",
+        "net_liq_series",
+        "net_liq_spx",
+        "jobless_claims"
+      ],
+      "keys_updated": [
+        "tga",
+        "bank_reserves",
+        "rmp",
+        "jobless_claims"
+      ],
+      "diffs": {
+        "tga.current_B": {
+          "old": 880.7,
+          "new": 918.7
+        },
+        "bank_reserves.current_B": {
+          "old": 3033.4,
+          "new": 2951.4
+        },
+        "rmp.cumulative_B": {
+          "old": 178.6,
+          "new": 179.4
+        },
+        "jobless_claims.current_K": {
+          "old": 226.0,
+          "new": 215.0
+        }
+      },
+      "status": "success",
+      "github_run_id": "28205652066",
+      "github_workflow": "Weekly macro update"
+    },
     {
       "timestamp": "2026-06-25T00:20:29.123549",
       "timestamp_kst": "2026-06-25 00:20 KST",
