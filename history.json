@@ -1,7 +1,150 @@
 {
-  "updated_at": "2026-07-06T00:14:56.854976",
+  "updated_at": "2026-07-07T00:17:48.334484",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-07-07T00:17:48.331757",
+      "timestamp_kst": "2026-07-07 00:17 KST",
+      "mode": "daily",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 7.4,
+      "keys_touched": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "keys_updated": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "gold",
+        "wti_uso"
+      ],
+      "diffs": {
+        "vix.current": {
+          "old": 15.81,
+          "new": 15.57
+        },
+        "move.current": {
+          "old": 65.4,
+          "new": 65.8
+        },
+        "hyg.current": {
+          "old": 79.71,
+          "new": 79.87
+        },
+        "hyg.hv10": {
+          "old": 3.54,
+          "new": 3.18
+        },
+        "us3m.current": {
+          "old": 3.85,
+          "new": 3.82
+        },
+        "us2y.current": {
+          "old": 4.181,
+          "new": 4.116
+        },
+        "us5y.current": {
+          "old": 4.24,
+          "new": 4.23
+        },
+        "us10y.current": {
+          "old": 4.49,
+          "new": 4.474
+        },
+        "us30y.current": {
+          "old": 4.98,
+          "new": 4.988
+        },
+        "spread_10y2y.current": {
+          "old": 0.309,
+          "new": 0.358
+        },
+        "jp10y.current": {
+          "old": 2.778,
+          "new": 2.838
+        },
+        "us_jp_spread_bp.current": {
+          "old": 170.5,
+          "new": 163.6
+        },
+        "rrp.current_B": {
+          "old": 2.2,
+          "new": 2.7
+        },
+        "hy_oas.current_bp": {
+          "old": 275.0,
+          "new": 274.0
+        },
+        "bei_10y.current": {
+          "old": 2.23,
+          "new": 2.24
+        },
+        "real_rate_10y.current": {
+          "old": 2.26,
+          "new": 2.23
+        },
+        "skew.current": {
+          "old": 150.0,
+          "new": 145.4
+        },
+        "spx.current": {
+          "old": 7483.0,
+          "new": 7537.0
+        },
+        "usdjpy.current": {
+          "old": 161.32,
+          "new": 162.08
+        },
+        "gold.current": {
+          "old": 4175.0,
+          "new": 4157.0
+        },
+        "wti_uso.current": {
+          "old": 103.98,
+          "new": 104.35
+        }
+      },
+      "status": "success",
+      "github_run_id": "28832351484",
+      "github_workflow": "Daily macro update"
+    },
     {
       "timestamp": "2026-07-06T00:14:56.852189",
       "timestamp_kst": "2026-07-06 00:14 KST",
