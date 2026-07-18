@@ -1,7 +1,145 @@
 {
-  "updated_at": "2026-07-17T00:09:31.445239",
+  "updated_at": "2026-07-18T00:04:07.754626",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-07-18T00:04:07.751670",
+      "timestamp_kst": "2026-07-18 00:04 KST",
+      "mode": "daily",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 12.4,
+      "keys_touched": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "keys_updated": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "ig_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "diffs": {
+        "vix.current": {
+          "old": 16.73,
+          "new": 18.77
+        },
+        "move.current": {
+          "old": 68.2,
+          "new": 70.9
+        },
+        "hyg.current": {
+          "old": 79.8,
+          "new": 79.65
+        },
+        "hyg.hv10": {
+          "old": 2.54,
+          "new": 2.64
+        },
+        "us3m.current": {
+          "old": 3.83,
+          "new": 3.84
+        },
+        "us2y.current": {
+          "old": 4.158,
+          "new": 4.183
+        },
+        "us5y.current": {
+          "old": 4.26,
+          "new": 4.28
+        },
+        "us10y.current": {
+          "old": 4.559,
+          "new": 4.55
+        },
+        "us30y.current": {
+          "old": 5.086,
+          "new": 5.072
+        },
+        "spread_10y2y.current": {
+          "old": 0.401,
+          "new": 0.367
+        },
+        "jp10y.current": {
+          "old": 2.715,
+          "new": 2.712
+        },
+        "us_jp_spread_bp.current": {
+          "old": 184.4,
+          "new": 183.8
+        },
+        "ig_oas.current_bp": {
+          "old": 79.0,
+          "new": 78.0
+        },
+        "bei_10y.current": {
+          "old": 2.22,
+          "new": 2.24
+        },
+        "real_rate_10y.current": {
+          "old": 2.34,
+          "new": 2.31
+        },
+        "skew.current": {
+          "old": 145.7,
+          "new": 147.3
+        },
+        "spx.current": {
+          "old": 7534.0,
+          "new": 7458.0
+        },
+        "dxy.current": {
+          "old": 100.71,
+          "new": 100.75
+        },
+        "gold.current": {
+          "old": 4035.0,
+          "new": 3984.0
+        },
+        "wti_uso.current": {
+          "old": 119.3,
+          "new": 123.96
+        }
+      },
+      "status": "success",
+      "github_run_id": "29622236008",
+      "github_workflow": "Daily macro update"
+    },
     {
       "timestamp": "2026-07-17T00:09:31.442188",
       "timestamp_kst": "2026-07-17 00:09 KST",
@@ -9795,43 +9933,6 @@
       "keys_updated": [],
       "diffs": {},
       "status": "unchanged",
-      "github_run_id": null,
-      "github_workflow": null
-    },
-    {
-      "timestamp": "2026-04-29T14:30:55.852169",
-      "timestamp_kst": "2026-04-29 14:30 KST",
-      "mode": "daily",
-      "trigger": "manual_local",
-      "actor": null,
-      "duration_sec": 35.5,
-      "keys_touched": [
-        "vix",
-        "move",
-        "hyg",
-        "us3m",
-        "us2y",
-        "us5y",
-        "us10y",
-        "us30y",
-        "spread_10y2y",
-        "jp10y",
-        "us_jp_spread_bp",
-        "rrp",
-        "ig_oas",
-        "hy_oas",
-        "bei_10y",
-        "real_rate_10y",
-        "skew",
-        "spx",
-        "usdjpy",
-        "dxy",
-        "gold",
-        "wti_uso"
-      ],
-      "keys_updated": [],
-      "diffs": {},
-      "status": "partial",
       "github_run_id": null,
       "github_workflow": null
     }
