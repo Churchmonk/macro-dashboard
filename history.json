@@ -1,7 +1,145 @@
 {
-  "updated_at": "2026-07-20T00:07:07.320542",
+  "updated_at": "2026-07-21T00:06:33.388966",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-07-21T00:06:33.385959",
+      "timestamp_kst": "2026-07-21 00:06 KST",
+      "mode": "daily",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 10.6,
+      "keys_touched": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "keys_updated": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "diffs": {
+        "vix.current": {
+          "old": 18.77,
+          "new": 18.65
+        },
+        "move.current": {
+          "old": 70.9,
+          "new": 72.7
+        },
+        "hyg.current": {
+          "old": 79.65,
+          "new": 79.68
+        },
+        "hyg.hv10": {
+          "old": 2.64,
+          "new": 2.4
+        },
+        "us3m.current": {
+          "old": 3.84,
+          "new": 3.85
+        },
+        "us2y.current": {
+          "old": 4.183,
+          "new": 4.215
+        },
+        "us10y.current": {
+          "old": 4.55,
+          "new": 4.597
+        },
+        "us30y.current": {
+          "old": 5.072,
+          "new": 5.115
+        },
+        "spread_10y2y.current": {
+          "old": 0.367,
+          "new": 0.382
+        },
+        "rrp.current_B": {
+          "old": 0.1,
+          "new": 0.0
+        },
+        "ig_oas.current_bp": {
+          "old": 78.0,
+          "new": 79.0
+        },
+        "hy_oas.current_bp": {
+          "old": 271.0,
+          "new": 273.0
+        },
+        "bei_10y.current": {
+          "old": 2.24,
+          "new": 2.25
+        },
+        "real_rate_10y.current": {
+          "old": 2.31,
+          "new": 2.35
+        },
+        "skew.current": {
+          "old": 147.3,
+          "new": 146.1
+        },
+        "spx.current": {
+          "old": 7458.0,
+          "new": 7443.0
+        },
+        "usdjpy.current": {
+          "old": 162.43,
+          "new": 162.5
+        },
+        "dxy.current": {
+          "old": 100.77,
+          "new": 101.0
+        },
+        "gold.current": {
+          "old": 4011.0,
+          "new": 4025.0
+        },
+        "wti_uso.current": {
+          "old": 123.96,
+          "new": 125.51
+        }
+      },
+      "status": "success",
+      "github_run_id": "29789300452",
+      "github_workflow": "Daily macro update"
+    },
     {
       "timestamp": "2026-07-20T00:07:07.318241",
       "timestamp_kst": "2026-07-20 00:07 KST",
@@ -9930,43 +10068,6 @@
       },
       "status": "success",
       "github_run_id": "25140285521",
-      "github_workflow": "Daily macro update"
-    },
-    {
-      "timestamp": "2026-04-29T06:40:41.992137",
-      "timestamp_kst": "2026-04-29 06:40 KST",
-      "mode": "daily",
-      "trigger": "workflow_dispatch",
-      "actor": "Churchmonk",
-      "duration_sec": 8.0,
-      "keys_touched": [
-        "vix",
-        "move",
-        "hyg",
-        "us3m",
-        "us2y",
-        "us5y",
-        "us10y",
-        "us30y",
-        "spread_10y2y",
-        "jp10y",
-        "us_jp_spread_bp",
-        "rrp",
-        "ig_oas",
-        "hy_oas",
-        "bei_10y",
-        "real_rate_10y",
-        "skew",
-        "spx",
-        "usdjpy",
-        "dxy",
-        "gold",
-        "wti_uso"
-      ],
-      "keys_updated": [],
-      "diffs": {},
-      "status": "unchanged",
-      "github_run_id": "25094645739",
       "github_workflow": "Daily macro update"
     }
   ]
