@@ -1,7 +1,160 @@
 {
-  "updated_at": "2026-08-23T23:31:35.820103",
+  "updated_at": "2026-08-24T23:31:12.874245",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-08-24T23:31:12.871289",
+      "timestamp_kst": "2026-08-24 23:31 KST",
+      "mode": "daily",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 11.7,
+      "keys_touched": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "keys_updated": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "diffs": {
+        "vix.current": {
+          "old": 15.13,
+          "new": 15.85
+        },
+        "move.current": {
+          "old": 73.4,
+          "new": 74.0
+        },
+        "hyg.current": {
+          "old": 79.61,
+          "new": 79.7
+        },
+        "hyg.hv10": {
+          "old": 2.49,
+          "new": 2.37
+        },
+        "us3m.current": {
+          "old": 3.87,
+          "new": 3.88
+        },
+        "us2y.current": {
+          "old": 4.24,
+          "new": 4.232
+        },
+        "us5y.current": {
+          "old": 4.39,
+          "new": 4.43
+        },
+        "us10y.current": {
+          "old": 4.736,
+          "new": 4.701
+        },
+        "us30y.current": {
+          "old": 5.275,
+          "new": 5.228
+        },
+        "spread_10y2y.current": {
+          "old": 0.496,
+          "new": 0.469
+        },
+        "jp10y.current": {
+          "old": 2.875,
+          "new": 2.88
+        },
+        "us_jp_spread_bp.current": {
+          "old": 186.1,
+          "new": 182.1
+        },
+        "rrp.current_B": {
+          "old": 0.2,
+          "new": 0.4
+        },
+        "ig_oas.current_bp": {
+          "old": 82.0,
+          "new": 81.0
+        },
+        "hy_oas.current_bp": {
+          "old": 275.0,
+          "new": 270.0
+        },
+        "bei_10y.current": {
+          "old": 2.34,
+          "new": 2.32
+        },
+        "real_rate_10y.current": {
+          "old": 2.4,
+          "new": 2.38
+        },
+        "skew.current": {
+          "old": 143.9,
+          "new": 145.6
+        },
+        "spx.current": {
+          "old": 7674.0,
+          "new": 7653.0
+        },
+        "usdjpy.current": {
+          "old": 158.98,
+          "new": 159.05
+        },
+        "dxy.current": {
+          "old": 98.8,
+          "new": 98.98
+        },
+        "gold.current": {
+          "old": 4608.0,
+          "new": 4624.0
+        },
+        "wti_uso.current": {
+          "old": 134.64,
+          "new": 132.21
+        }
+      },
+      "status": "success",
+      "github_run_id": "32789678703",
+      "github_workflow": "Daily macro update"
+    },
     {
       "timestamp": "2026-08-23T23:31:35.817108",
       "timestamp_kst": "2026-08-23 23:31 KST",
@@ -10235,40 +10388,6 @@
       "status": "success",
       "github_run_id": "26858673241",
       "github_workflow": "Daily macro update"
-    },
-    {
-      "timestamp": "2026-06-02T03:41:55.094162",
-      "timestamp_kst": "2026-06-02 03:41 KST",
-      "mode": "monthly",
-      "trigger": "schedule",
-      "actor": "Churchmonk",
-      "duration_sec": 8.8,
-      "keys_touched": [
-        "fed_funds",
-        "unemployment",
-        "nfp",
-        "jolts",
-        "cpi_annual",
-        "ism_pmi",
-        "china_lpr"
-      ],
-      "keys_updated": [
-        "fed_funds",
-        "ism_pmi"
-      ],
-      "diffs": {
-        "fed_funds.current": {
-          "old": 3.64,
-          "new": 3.63
-        },
-        "ism_pmi.current": {
-          "old": 52.7,
-          "new": 52.0
-        }
-      },
-      "status": "success",
-      "github_run_id": "26796904332",
-      "github_workflow": "Monthly macro update"
     }
   ]
 }
