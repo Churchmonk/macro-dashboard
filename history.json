@@ -1,7 +1,57 @@
 {
-  "updated_at": "2026-08-27T04:29:26.175182",
+  "updated_at": "2026-08-28T05:32:28.468823",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-08-28T05:32:28.465935",
+      "timestamp_kst": "2026-08-28 05:32 KST",
+      "mode": "weekly",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 2.6,
+      "keys_touched": [
+        "fed_balance",
+        "tga",
+        "bank_reserves",
+        "wres_series",
+        "rmp",
+        "net_liq_series",
+        "net_liq_spx",
+        "jobless_claims"
+      ],
+      "keys_updated": [
+        "fed_balance",
+        "tga",
+        "bank_reserves",
+        "rmp",
+        "jobless_claims"
+      ],
+      "diffs": {
+        "fed_balance.current_T": {
+          "old": 6.75,
+          "new": 6.73
+        },
+        "tga.current_B": {
+          "old": 953.6,
+          "new": 950.7
+        },
+        "bank_reserves.current_B": {
+          "old": 2935.3,
+          "new": 2924.9
+        },
+        "rmp.cumulative_B": {
+          "old": 233.5,
+          "new": 237.4
+        },
+        "jobless_claims.current_K": {
+          "old": 206.0,
+          "new": 203.0
+        }
+      },
+      "status": "success",
+      "github_run_id": "33145057889",
+      "github_workflow": "Weekly macro update"
+    },
     {
       "timestamp": "2026-08-27T04:29:26.172098",
       "timestamp_kst": "2026-08-27 04:29 KST",
@@ -10342,36 +10392,6 @@
       "status": "success",
       "github_run_id": "26987505823",
       "github_workflow": "Daily macro update"
-    },
-    {
-      "timestamp": "2026-06-04T22:53:12.920024",
-      "timestamp_kst": "2026-06-04 22:53 KST",
-      "mode": "weekly",
-      "trigger": "schedule",
-      "actor": "Churchmonk",
-      "duration_sec": 3.2,
-      "keys_touched": [
-        "fed_balance",
-        "tga",
-        "bank_reserves",
-        "wres_series",
-        "rmp",
-        "net_liq_series",
-        "net_liq_spx",
-        "jobless_claims"
-      ],
-      "keys_updated": [
-        "jobless_claims"
-      ],
-      "diffs": {
-        "jobless_claims.current_K": {
-          "old": 215.0,
-          "new": 225.0
-        }
-      },
-      "status": "success",
-      "github_run_id": "26984396755",
-      "github_workflow": "Weekly macro update"
     }
   ]
 }
