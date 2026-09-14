@@ -1,7 +1,61 @@
 {
-  "updated_at": "2026-09-13T00:55:04.360982",
+  "updated_at": "2026-09-14T00:59:18.315464",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-09-14T00:59:18.312356",
+      "timestamp_kst": "2026-09-14 00:59 KST",
+      "mode": "daily",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 11.4,
+      "keys_touched": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "keys_updated": [
+        "usdjpy",
+        "dxy",
+        "gold"
+      ],
+      "diffs": {
+        "usdjpy.current": {
+          "old": 153.62,
+          "new": 153.52
+        },
+        "dxy.current": {
+          "old": 99.09,
+          "new": 99.12
+        },
+        "gold.current": {
+          "old": 4348.0,
+          "new": 4347.0
+        }
+      },
+      "status": "success",
+      "github_run_id": "34794394612",
+      "github_workflow": "Daily macro update"
+    },
     {
       "timestamp": "2026-09-13T00:55:04.358887",
       "timestamp_kst": "2026-09-13 00:55 KST",
@@ -10374,55 +10428,6 @@
       },
       "status": "success",
       "github_run_id": "27993150753",
-      "github_workflow": "Daily macro update"
-    },
-    {
-      "timestamp": "2026-06-22T00:19:54.472081",
-      "timestamp_kst": "2026-06-22 00:19 KST",
-      "mode": "daily",
-      "trigger": "schedule",
-      "actor": "Churchmonk",
-      "duration_sec": 7.6,
-      "keys_touched": [
-        "vix",
-        "move",
-        "hyg",
-        "us3m",
-        "us2y",
-        "us5y",
-        "us10y",
-        "us30y",
-        "spread_10y2y",
-        "jp10y",
-        "us_jp_spread_bp",
-        "rrp",
-        "ig_oas",
-        "hy_oas",
-        "bei_10y",
-        "real_rate_10y",
-        "skew",
-        "spx",
-        "usdjpy",
-        "dxy",
-        "gold",
-        "wti_uso"
-      ],
-      "keys_updated": [
-        "usdjpy",
-        "dxy"
-      ],
-      "diffs": {
-        "usdjpy.current": {
-          "old": 161.27,
-          "new": 161.23
-        },
-        "dxy.current": {
-          "old": 100.76,
-          "new": 100.85
-        }
-      },
-      "status": "success",
-      "github_run_id": "27922264016",
       "github_workflow": "Daily macro update"
     }
   ]
