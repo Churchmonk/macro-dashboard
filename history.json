@@ -1,7 +1,56 @@
 {
-  "updated_at": "2026-09-26T01:29:03.221632",
+  "updated_at": "2026-09-27T01:21:41.643728",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-09-27T01:21:41.640704",
+      "timestamp_kst": "2026-09-27 01:21 KST",
+      "mode": "daily",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 9.6,
+      "keys_touched": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "keys_updated": [
+        "usdjpy",
+        "gold"
+      ],
+      "diffs": {
+        "usdjpy.current": {
+          "old": 158.18,
+          "new": 157.28
+        },
+        "gold.current": {
+          "old": 4271.0,
+          "new": 4286.0
+        }
+      },
+      "status": "success",
+      "github_run_id": "36285281932",
+      "github_workflow": "Daily macro update"
+    },
     {
       "timestamp": "2026-09-26T01:29:03.218582",
       "timestamp_kst": "2026-09-26 01:29 KST",
@@ -10424,50 +10473,6 @@
       },
       "status": "success",
       "github_run_id": "28759862777",
-      "github_workflow": "Daily macro update"
-    },
-    {
-      "timestamp": "2026-07-05T00:10:37.231330",
-      "timestamp_kst": "2026-07-05 00:10 KST",
-      "mode": "daily",
-      "trigger": "schedule",
-      "actor": "Churchmonk",
-      "duration_sec": 14.1,
-      "keys_touched": [
-        "vix",
-        "move",
-        "hyg",
-        "us3m",
-        "us2y",
-        "us5y",
-        "us10y",
-        "us30y",
-        "spread_10y2y",
-        "jp10y",
-        "us_jp_spread_bp",
-        "rrp",
-        "ig_oas",
-        "hy_oas",
-        "bei_10y",
-        "real_rate_10y",
-        "skew",
-        "spx",
-        "usdjpy",
-        "dxy",
-        "gold",
-        "wti_uso"
-      ],
-      "keys_updated": [
-        "gold"
-      ],
-      "diffs": {
-        "gold.current": {
-          "old": 4176.0,
-          "new": 4175.0
-        }
-      },
-      "status": "success",
-      "github_run_id": "28723990728",
       "github_workflow": "Daily macro update"
     }
   ]
