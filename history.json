@@ -1,7 +1,57 @@
 {
-  "updated_at": "2026-10-15T01:24:48.650707",
+  "updated_at": "2026-10-15T23:45:12.156204",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-10-15T23:45:12.153194",
+      "timestamp_kst": "2026-10-15 23:45 KST",
+      "mode": "weekly",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 3.0,
+      "keys_touched": [
+        "fed_balance",
+        "tga",
+        "bank_reserves",
+        "wres_series",
+        "rmp",
+        "net_liq_series",
+        "net_liq_spx",
+        "jobless_claims"
+      ],
+      "keys_updated": [
+        "fed_balance",
+        "tga",
+        "bank_reserves",
+        "rmp",
+        "jobless_claims"
+      ],
+      "diffs": {
+        "fed_balance.current_T": {
+          "old": 6.75,
+          "new": 6.76
+        },
+        "tga.current_B": {
+          "old": 880.3,
+          "new": 883.4
+        },
+        "bank_reserves.current_B": {
+          "old": 3029.7,
+          "new": 3022.1
+        },
+        "rmp.cumulative_B": {
+          "old": 257.7,
+          "new": 261.8
+        },
+        "jobless_claims.current_K": {
+          "old": 197.0,
+          "new": 199.0
+        }
+      },
+      "status": "success",
+      "github_run_id": "38825412127",
+      "github_workflow": "Weekly macro update"
+    },
     {
       "timestamp": "2026-10-15T01:24:48.647649",
       "timestamp_kst": "2026-10-15 01:24 KST",
@@ -10392,56 +10442,6 @@
       "status": "success",
       "github_run_id": "30055248040",
       "github_workflow": "Daily macro update"
-    },
-    {
-      "timestamp": "2026-07-23T22:31:28.924252",
-      "timestamp_kst": "2026-07-23 22:31 KST",
-      "mode": "weekly",
-      "trigger": "schedule",
-      "actor": "Churchmonk",
-      "duration_sec": 10.6,
-      "keys_touched": [
-        "fed_balance",
-        "tga",
-        "bank_reserves",
-        "wres_series",
-        "rmp",
-        "net_liq_series",
-        "net_liq_spx",
-        "jobless_claims"
-      ],
-      "keys_updated": [
-        "fed_balance",
-        "tga",
-        "bank_reserves",
-        "rmp",
-        "jobless_claims"
-      ],
-      "diffs": {
-        "fed_balance.current_T": {
-          "old": 6.74,
-          "new": 6.75
-        },
-        "tga.current_B": {
-          "old": 756.2,
-          "new": 829.6
-        },
-        "bank_reserves.current_B": {
-          "old": 3142.7,
-          "new": 3062.1
-        },
-        "rmp.cumulative_B": {
-          "old": 201.2,
-          "new": 206.9
-        },
-        "jobless_claims.current_K": {
-          "old": 208.0,
-          "new": 187.0
-        }
-      },
-      "status": "success",
-      "github_run_id": "30050151204",
-      "github_workflow": "Weekly macro update"
     }
   ]
 }
