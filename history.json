@@ -1,7 +1,51 @@
 {
-  "updated_at": "2026-10-17T01:15:32.157594",
+  "updated_at": "2026-10-18T00:56:29.680368",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-10-18T00:56:29.678043",
+      "timestamp_kst": "2026-10-18 00:56 KST",
+      "mode": "daily",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 8.2,
+      "keys_touched": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "keys_updated": [
+        "gold"
+      ],
+      "diffs": {
+        "gold.current": {
+          "old": 4156.0,
+          "new": 4165.0
+        }
+      },
+      "status": "success",
+      "github_run_id": "39084607504",
+      "github_workflow": "Daily macro update"
+    },
     {
       "timestamp": "2026-10-17T01:15:32.154045",
       "timestamp_kst": "2026-10-17 01:15 KST",
@@ -10396,50 +10440,6 @@
       },
       "status": "success",
       "github_run_id": "30226768716",
-      "github_workflow": "Daily macro update"
-    },
-    {
-      "timestamp": "2026-07-26T00:09:14.069154",
-      "timestamp_kst": "2026-07-26 00:09 KST",
-      "mode": "daily",
-      "trigger": "schedule",
-      "actor": "Churchmonk",
-      "duration_sec": 10.4,
-      "keys_touched": [
-        "vix",
-        "move",
-        "hyg",
-        "us3m",
-        "us2y",
-        "us5y",
-        "us10y",
-        "us30y",
-        "spread_10y2y",
-        "jp10y",
-        "us_jp_spread_bp",
-        "rrp",
-        "ig_oas",
-        "hy_oas",
-        "bei_10y",
-        "real_rate_10y",
-        "skew",
-        "spx",
-        "usdjpy",
-        "dxy",
-        "gold",
-        "wti_uso"
-      ],
-      "keys_updated": [
-        "gold"
-      ],
-      "diffs": {
-        "gold.current": {
-          "old": 4028.0,
-          "new": 4056.0
-        }
-      },
-      "status": "success",
-      "github_run_id": "30180658728",
       "github_workflow": "Daily macro update"
     }
   ]
