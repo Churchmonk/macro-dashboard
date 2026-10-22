@@ -1,7 +1,118 @@
 {
-  "updated_at": "2026-10-21T06:48:37.037164",
+  "updated_at": "2026-10-22T01:27:14.661485",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-10-22T01:27:14.658122",
+      "timestamp_kst": "2026-10-22 01:27 KST",
+      "mode": "daily",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 38.5,
+      "keys_touched": [
+        "vix",
+        "move",
+        "hyg",
+        "us2y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "keys_updated": [
+        "vix",
+        "move",
+        "hyg",
+        "us2y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "diffs": {
+        "vix.current": {
+          "old": 17.31,
+          "new": 16.68
+        },
+        "move.current": {
+          "old": 101.7,
+          "new": 95.9
+        },
+        "hyg.current": {
+          "old": 76.83,
+          "new": 76.98
+        },
+        "hyg.hv10": {
+          "old": 3.74,
+          "new": 3.93
+        },
+        "us2y.current": {
+          "old": 4.8,
+          "new": 4.808
+        },
+        "us10y.current": {
+          "old": 5.132,
+          "new": 5.111
+        },
+        "us30y.current": {
+          "old": 5.439,
+          "new": 5.399
+        },
+        "spread_10y2y.current": {
+          "old": 0.332,
+          "new": 0.303
+        },
+        "jp10y.current": {
+          "old": 2.902,
+          "new": 2.886
+        },
+        "us_jp_spread_bp.current": {
+          "old": 223.0,
+          "new": 222.5
+        },
+        "skew.current": {
+          "old": 160.4,
+          "new": 150.4
+        },
+        "spx.current": {
+          "old": 7713.0,
+          "new": 7757.0
+        },
+        "usdjpy.current": {
+          "old": 158.36,
+          "new": 158.21
+        },
+        "dxy.current": {
+          "old": 101.78,
+          "new": 101.69
+        },
+        "gold.current": {
+          "old": 4145.0,
+          "new": 4114.0
+        },
+        "wti_uso.current": {
+          "old": 160.61,
+          "new": 159.8
+        }
+      },
+      "status": "success",
+      "github_run_id": "39705683346",
+      "github_workflow": "Daily macro update"
+    },
     {
       "timestamp": "2026-10-21T06:48:37.033507",
       "timestamp_kst": "2026-10-21 06:48 KST",
@@ -10273,56 +10384,6 @@
       "status": "success",
       "github_run_id": "30592863237",
       "github_workflow": "Daily macro update"
-    },
-    {
-      "timestamp": "2026-07-30T22:35:41.761241",
-      "timestamp_kst": "2026-07-30 22:35 KST",
-      "mode": "weekly",
-      "trigger": "schedule",
-      "actor": "Churchmonk",
-      "duration_sec": 3.4,
-      "keys_touched": [
-        "fed_balance",
-        "tga",
-        "bank_reserves",
-        "wres_series",
-        "rmp",
-        "net_liq_series",
-        "net_liq_spx",
-        "jobless_claims"
-      ],
-      "keys_updated": [
-        "fed_balance",
-        "tga",
-        "bank_reserves",
-        "rmp",
-        "jobless_claims"
-      ],
-      "diffs": {
-        "fed_balance.current_T": {
-          "old": 6.75,
-          "new": 6.74
-        },
-        "tga.current_B": {
-          "old": 829.6,
-          "new": 910.8
-        },
-        "bank_reserves.current_B": {
-          "old": 3062.1,
-          "new": 2984.6
-        },
-        "rmp.cumulative_B": {
-          "old": 206.9,
-          "new": 210.9
-        },
-        "jobless_claims.current_K": {
-          "old": 187.0,
-          "new": 197.0
-        }
-      },
-      "status": "success",
-      "github_run_id": "30587677465",
-      "github_workflow": "Weekly macro update"
     }
   ]
 }
