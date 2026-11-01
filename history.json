@@ -1,7 +1,44 @@
 {
-  "updated_at": "2026-10-31T02:16:11.252417",
+  "updated_at": "2026-11-01T02:07:52.225658",
   "limit": 100,
   "events": [
+    {
+      "timestamp": "2026-11-01T02:07:52.223154",
+      "timestamp_kst": "2026-11-01 02:07 KST",
+      "mode": "daily",
+      "trigger": "schedule",
+      "actor": "Churchmonk",
+      "duration_sec": 5.3,
+      "keys_touched": [
+        "vix",
+        "move",
+        "hyg",
+        "us3m",
+        "us2y",
+        "us5y",
+        "us10y",
+        "us30y",
+        "spread_10y2y",
+        "jp10y",
+        "us_jp_spread_bp",
+        "rrp",
+        "ig_oas",
+        "hy_oas",
+        "bei_10y",
+        "real_rate_10y",
+        "skew",
+        "spx",
+        "usdjpy",
+        "dxy",
+        "gold",
+        "wti_uso"
+      ],
+      "keys_updated": [],
+      "diffs": {},
+      "status": "unchanged",
+      "github_run_id": "41263862317",
+      "github_workflow": "Daily macro update"
+    },
     {
       "timestamp": "2026-10-31T02:16:11.249181",
       "timestamp_kst": "2026-10-31 02:16 KST",
@@ -10325,55 +10362,6 @@
       },
       "status": "success",
       "github_run_id": "31443608589",
-      "github_workflow": "Daily macro update"
-    },
-    {
-      "timestamp": "2026-08-09T23:41:46.971261",
-      "timestamp_kst": "2026-08-09 23:41 KST",
-      "mode": "daily",
-      "trigger": "schedule",
-      "actor": "Churchmonk",
-      "duration_sec": 8.6,
-      "keys_touched": [
-        "vix",
-        "move",
-        "hyg",
-        "us3m",
-        "us2y",
-        "us5y",
-        "us10y",
-        "us30y",
-        "spread_10y2y",
-        "jp10y",
-        "us_jp_spread_bp",
-        "rrp",
-        "ig_oas",
-        "hy_oas",
-        "bei_10y",
-        "real_rate_10y",
-        "skew",
-        "spx",
-        "usdjpy",
-        "dxy",
-        "gold",
-        "wti_uso"
-      ],
-      "keys_updated": [
-        "usdjpy",
-        "dxy"
-      ],
-      "diffs": {
-        "usdjpy.current": {
-          "old": 157.76,
-          "new": 157.69
-        },
-        "dxy.current": {
-          "old": 99.6,
-          "new": 99.54
-        }
-      },
-      "status": "success",
-      "github_run_id": "31342511252",
       "github_workflow": "Daily macro update"
     }
   ]
