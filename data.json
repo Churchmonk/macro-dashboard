@@ -1,12 +1,12 @@
 {
   "meta": {
-    "updated_at": "2026-11-02T02:23:34.600545",
-    "updated_str": "2026-11-02 02:23 KST",
-    "last_mode": "daily",
+    "updated_at": "2026-11-02T04:20:00.342353",
+    "updated_str": "2026-11-02 04:20 KST",
+    "last_mode": "monthly",
     "last_full_at": null,
     "last_daily_at": "2026-11-02T02:23:34.600545",
     "last_weekly_at": "2026-10-30T01:16:05.733272",
-    "last_monthly_at": "2026-10-21T06:48:37.033507"
+    "last_monthly_at": "2026-11-02T04:20:00.342353"
   },
   "vix": {
     "current": 19.42,
@@ -2224,7 +2224,7 @@
   "ism_pmi": {
     "current": 54.5,
     "source": "Scrapling/TradingEconomics",
-    "date": "2026-10"
+    "date": "2026-11"
   },
   "china_lpr": {
     "lpr_1y": 3.0,
