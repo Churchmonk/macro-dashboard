@@ -1,11 +1,11 @@
 {
   "meta": {
-    "updated_at": "2026-11-26T04:57:31.668580",
-    "updated_str": "2026-11-26 04:57 KST",
-    "last_mode": "daily",
+    "updated_at": "2026-11-27T03:43:09.806734",
+    "updated_str": "2026-11-27 03:43 KST",
+    "last_mode": "weekly",
     "last_full_at": null,
     "last_daily_at": "2026-11-26T04:57:31.668580",
-    "last_weekly_at": "2026-11-20T02:29:58.030407",
+    "last_weekly_at": "2026-11-27T03:43:09.806734",
     "last_monthly_at": "2026-11-21T08:58:37.360661"
   },
   "vix": {
@@ -2165,7 +2165,7 @@
     }
   },
   "jobless_claims": {
-    "current_K": 203.0,
+    "current_K": 189.0,
     "chart": {
       "labels": [
         "24.12",
@@ -2217,7 +2217,7 @@
         207.0,
         199.0,
         191.0,
-        203.0
+        189.0
       ]
     }
   },
